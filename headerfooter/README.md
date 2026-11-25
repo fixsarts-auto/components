@@ -13,7 +13,7 @@ components/headerfooter/
 
 ## Cara kerja sehari-hari
 
-1. Buka `demo.html` lewat Live Server / GitHub Pages (`https://fixsarts.github.io/components/headerfooter/demo.html`).
+1. Buka `demo.html` lewat Live Server / GitHub Pages (`https://fixsarts-auto.github.io/components/headerfooter/demo.html`).
 2. Atur lewat tab **Header · Footer · Bahasa · Tampilan** — preview di kanan berubah langsung.
    **Edit visual** (tombol ON/OFF di atas preview): klik bagian mana saja di preview (logo, menu, ikon sosmed, copyright, dll) dan panel kiri otomatis lompat ke pengaturannya.
    Ganti ukuran **Desktop / Tablet / HP** dari tombol di atas preview.
@@ -36,11 +36,11 @@ website target di tengah, footer di bawah, dengan ukuran Desktop / Tablet / HP y
 Tab **Pasang** di demo.html menghasilkan kodenya (alamat folder bisa diubah). Intinya:
 
 ```html
-<link rel="stylesheet" href="https://fixsarts.github.io/components/headerfooter/headerfooter.css">
+<link rel="stylesheet" href="https://fixsarts-auto.github.io/components/headerfooter/headerfooter.css">
 
 <header data-site-header></header>
-<script src="https://fixsarts.github.io/components/headerfooter/headerfooter-config.js"></script>
-<script src="https://fixsarts.github.io/components/headerfooter/headerfooter.js"></script>
+<script src="https://fixsarts-auto.github.io/components/headerfooter/headerfooter-config.js"></script>
+<script src="https://fixsarts-auto.github.io/components/headerfooter/headerfooter.js"></script>
 
 <footer data-site-footer></footer>
 ```
