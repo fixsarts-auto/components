@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo & Konfigurasi — Header + Footer</title>
+<!--
+  =====================================================================
+  demo.html — TEMPAT MENGATUR HEADER + FOOTER
+  Semua pengaturan (teks, link, logo, menu, bahasa, warna, layout) diubah di sini
+  dengan tampilan langsung. Preview Desktop / Tablet / HP dan preview di website
+  lain ada di halaman ini juga.
+
+  Hasil akhirnya: tombol "Unduh headerfooter-config.js" -> timpa file itu di repo.
+  Buka lewat Live Server / GitHub Pages (bukan klik dua kali file-nya).
+  =====================================================================
+-->
+<style>
+  :root{
+    --bg:#0B0B0F; --panel:#121217; --panel2:#181820; --line:#26262E; --line2:#1D1D24;
+    --text:#F4F4F6; --muted:#9B9BA5; --faint:#5E5E68;
+    --accent:#6C7BFF; --accent2:#8B5CF6; --ok:#3DDC97; --warn:#F5B84B; --bad:#FF6B6B;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:#34343e transparent;}
+  *::-webkit-scrollbar{width:9px;height:9px;}
+  *::-webkit-scrollbar-thumb{background:#34343e;border-radius:9px;}
+  *::-webkit-scrollbar-track,*::-webkit-scrollbar-corner{background:transparent;}
+  *::-webkit-scrollbar-button{display:none;}
+  html,body{margin:0;height:100%;}
+  body{background:var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;}
+  button,input,select,textarea{font:inherit;color:inherit;}
+  option{background:#1a1a21;color:#f4f4f6;}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#1b1b23;padding:1px 6px;border-radius:5px;}
+
+  /* ---------- kerangka ---------- */
+  .app{display:grid;grid-template-columns:minmax(360px,450px) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);height:100vh;}
+  .topbar{grid-column:1/-1;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 18px;background:var(--panel);border-bottom:1px solid var(--line);}
+  .topbar h1{font-size:1rem;margin:0;font-weight:700;letter-spacing:.01em;}
+  .topbar h1 span{color:var(--accent);}
+  .topbar .sp{flex:1;}
+  .chip{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;color:var(--muted);padding:4px 10px;border:1px solid var(--line);border-radius:99px;}
+  .chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);}
+  .chip.dirty{color:var(--warn);border-color:#4a3b1d;}
+  .chip.dirty::before{background:var(--warn);}
+
+  .btn{border:1px solid var(--line);background:var(--panel2);padding:7px 13px;border-radius:9px;cursor:pointer;font-size:.85rem;font-weight:500;transition:border-color .15s,background .15s;}
+  .btn:hover{border-color:#3a3a46;background:#1f1f28;}
+  .btn.primary{border:0;background:linear-gradient(120deg,#4E7CFF,#8B5CF6);color:#fff;font-weight:600;}
+  .btn.primary:hover{filter:brightness(1.1);}
+  .mini{border:1px solid var(--line);background:var(--panel2);width:28px;height:28px;border-radius:7px;cursor:pointer;display:inline-grid;place-items:center;font-size:.8rem;padding:0;}
+  .mini:hover:not(:disabled){border-color:#3a3a46;background:#22222b;}
+  .mini:disabled{opacity:.3;cursor:default;}
+  .mini.bad:hover{border-color:var(--bad);color:var(--bad);}
+
+  /* ---------- panel kiri ---------- */
+  .panel{display:flex;flex-direction:column;min-height:0;background:var(--panel);border-right:1px solid var(--line);}
+  .tabs{display:flex;gap:2px;padding:8px 10px 0;border-bottom:1px solid var(--line);overflow-x:auto;flex-shrink:0;}
+  .tab{border:0;background:none;padding:9px 12px;color:var(--muted);cursor:pointer;font-weight:500;font-size:.86rem;border-bottom:2px solid transparent;white-space:nowrap;}
+  .tab:hover{color:var(--text);}
+  .tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent);}
+  .panel-body{flex:1;overflow-y:auto;padding:16px 16px 60px;}
+
+  .grp{margin:0 0 22px;}
+  .grp>h3{font-size:.74rem;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);margin:0 0 4px;font-weight:700;}
+  .grp>.note{margin:0 0 10px;font-size:.8rem;color:var(--muted);}
+  .fld{display:block;margin:0 0 11px;}
+  .fld>label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px;font-weight:500;}
+  .fld-h{display:block;font-size:.74rem;color:var(--faint);margin-top:4px;}
+  input[type=text],select,textarea{width:100%;background:#0E0E13;border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none;transition:border-color .15s;}
+  textarea{resize:vertical;min-height:38px;line-height:1.45;}
+  input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent);}
+  ::placeholder{color:#4d4d57;}
+  .chk{display:flex;align-items:center;gap:9px;margin:0 0 10px;cursor:pointer;font-size:.88rem;}
+  .chk input{width:16px;height:16px;accent-color:var(--accent);margin:0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;}
+  .color-row{display:flex;gap:8px;align-items:center;}
+  .color-row input[type=color]{width:38px;height:34px;padding:2px;border:1px solid var(--line);border-radius:8px;background:#0E0E13;cursor:pointer;flex-shrink:0;}
+
+  .row{background:var(--panel2);border:1px solid var(--line2);border-radius:11px;padding:10px 11px 3px;margin-bottom:9px;}
+  .row-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .row-n{font-size:.74rem;color:var(--faint);font-weight:600;}
+  .acts{display:flex;gap:5px;}
+  .sub-row{border:1px solid var(--line);border-radius:9px;padding:9px 10px 2px;margin-bottom:8px;background:#0F0F14;}
+  .add{width:100%;border:1px dashed #33333d;background:none;color:var(--muted);padding:8px;border-radius:9px;cursor:pointer;margin-bottom:8px;}
+  .add:hover{color:var(--text);border-color:var(--accent);}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;}
+  .kv{display:grid;grid-template-columns:110px 1fr 28px;gap:7px;margin-bottom:7px;align-items:center;}
+  .tkey{display:flex;align-items:center;justify-content:space-between;font-size:.76rem;color:var(--accent);margin-bottom:4px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;line-height:1.5;white-space:pre;overflow:auto;tab-size:2;}
+  .steps{margin:0 0 6px;padding-left:18px;color:var(--muted);font-size:.84rem;}
+  .steps li{margin-bottom:5px;}
+
+  /* ---------- panggung preview ---------- */
+  .stage{display:flex;flex-direction:column;min-width:0;min-height:0;background:#08080b;}
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel);}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+  .seg button{border:0;background:none;padding:7px 13px;cursor:pointer;color:var(--muted);font-size:.84rem;font-weight:500;}
+  .seg button+button{border-left:1px solid var(--line);}
+  .seg button[aria-pressed="true"]{background:#232330;color:var(--text);}
+  .url{display:flex;gap:8px;flex:1;min-width:260px;}
+  .url input{flex:1;}
+  .viewport{flex:1;min-height:0;overflow:auto;display:flex;justify-content:center;padding:16px;}
+  .device{width:100%;height:100%;min-height:420px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000;transition:width .25s ease;box-shadow:0 18px 50px rgba(0,0,0,.5);}
+  .device[data-device="tablet"]{width:768px;}
+  .device[data-device="mobile"]{width:390px;}
+  .device iframe{display:block;width:100%;height:100%;border:0;background:#000;}
+  .stage-foot{padding:8px 14px;border-top:1px solid var(--line);background:var(--panel);font-size:.78rem;color:var(--faint);display:flex;gap:16px;flex-wrap:wrap;}
+  .stage-foot b{color:var(--muted);font-weight:600;}
+
+  .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#22222c;border:1px solid #3a3a46;padding:9px 16px;border-radius:10px;font-size:.85rem;opacity:0;pointer-events:none;transition:all .22s;z-index:99;max-width:90vw;}
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+
+  .btn.tog[aria-pressed="true"]{border-color:var(--accent);background:#1c1c33;}
+  .btn.tog b{font-size:.72rem;padding:1px 7px;border-radius:99px;background:#2a2a35;color:var(--muted);margin-left:4px;}
+  .btn.tog[aria-pressed="true"] b{background:var(--accent);color:#fff;}
+  .flash{animation:flash 1.6s ease;}
+  @keyframes flash{0%,45%{box-shadow:0 0 0 2px var(--accent),0 0 28px rgba(108,123,255,.55);}100%{box-shadow:0 0 0 0 transparent;}}
+
+  @media (max-width:900px){
+    .app{display:block;height:auto;}
+    .panel{max-height:none;border-right:0;}
+    .panel-body{overflow:visible;}
+    .stage{height:88vh;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <h1>Header + Footer <span>· Demo &amp; Konfigurasi</span></h1>
+    <span class="chip" id="chip">Sama dengan file</span>
+    <span class="sp"></span>
+    <button class="btn" id="btnReset" type="button">Reset ke file</button>
+    <button class="btn" id="btnCopy" type="button">Salin config</button>
+    <button class="btn primary" id="btnDownload" type="button">Unduh headerfooter-config.js</button>
+  </header>
+
+  <aside class="panel">
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+    <div class="panel-body" id="panelBody"></div>
+  </aside>
+
+  <section class="stage">
+    <div class="toolbar">
+      <div class="seg" id="devices" role="group" aria-label="Ukuran layar">
+        <button type="button" data-device="desktop" aria-pressed="true">Desktop</button>
+        <button type="button" data-device="tablet" aria-pressed="false">Tablet</button>
+        <button type="button" data-device="mobile" aria-pressed="false">HP</button>
+      </div>
+      <button class="btn tog" id="editToggle" type="button" aria-pressed="true" title="Klik bagian di preview untuk langsung mengeditnya">✎ Edit visual <b>ON</b></button>
+      <div class="seg" id="pageBg" role="group" aria-label="Latar halaman contoh">
+        <button type="button" data-bg="dark" aria-pressed="true">Halaman gelap</button>
+        <button type="button" data-bg="light" aria-pressed="false">Halaman putih</button>
+      </div>
+      <form class="url" id="urlForm">
+        <input type="text" id="urlInput" placeholder="Preview di website lain — tempel alamatnya, mis. https://websitekamu.com" spellcheck="false" autocomplete="off" aria-label="Alamat website target">
+        <button class="btn" type="submit">Muat</button>
+        <button class="btn" type="button" id="urlClear" title="Kembali ke halaman contoh">Contoh</button>
+      </form>
+    </div>
+    <div class="viewport"><div class="device" id="device" data-device="desktop"><iframe id="frame" title="Preview header dan footer"></iframe></div></div>
+    <div class="stage-foot">
+      <span>Lebar preview: <b id="widthLabel">–</b></span>
+      <span id="editNote"></span><span id="targetNote">Menampilkan halaman contoh. Scroll ke bawah di dalam preview untuk melihat footer.</span>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<!-- Isi bawaan diambil dari file konfigurasi yang sebenarnya -->
+<script src="headerfooter-config.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* =====================================================================
+     STATE
+     ===================================================================== */
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  var FILE_H = clone(window.HeaderConfig || {});
+  var FILE_F = clone(window.FooterConfig || {});
+  var FILE_SIG = JSON.stringify([FILE_H, FILE_F]);
+  var LS_KEY = "hf_demo_draft_v1";
+
+  var DEFAULT_BASE = (function () {
+    try { if (/github\.io$/.test(location.hostname)) return new URL("./", location.href).href; } catch (e) {}
+    return "https://fixsarts.github.io/components/headerfooter/";
+  })();
+
+  var state = { header: clone(FILE_H), footer: clone(FILE_F) };
+  var ui = { tab: "header", lang: null, device: "desktop", target: "", base: DEFAULT_BASE, edit: true, page: "dark" };
+
+  try {
+    var saved = JSON.parse(localStorage.getItem(LS_KEY) || "null");
+    if (saved && saved.sig === FILE_SIG) {            // draft hanya dipakai kalau file aslinya belum berubah
+      state = saved.state;
+      ui.target = saved.target || "";
+      ui.base = saved.base || ui.base;
+      ui.device = saved.device || ui.device;
+      ui.edit = saved.edit !== false;
+      ui.page = saved.page === "light" ? "light" : "dark";
+    }
+  } catch (e) { /* abaikan */ }
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var panelBody = $("#panelBody");
+
+  function g() {                                      // ambil nilai: g("footer","brand","href")
+    var o = state;
+    for (var i = 0; i < arguments.length; i++) { if (o == null) return undefined; o = o[arguments[i]]; }
+    return o;
+  }
+  function put(path, val) {
+    var o = state;
+    for (var i = 0; i < path.length - 1; i++) {
+      var k = path[i];
+      if (o[k] == null || typeof o[k] !== "object") o[k] = typeof path[i + 1] === "number" ? [] : {};
+      o = o[k];
+    }
+    o[path[path.length - 1]] = val;
+  }
+  function del(path) {
+    var o = g.apply(null, path.slice(0, -1));
+    if (o) delete o[path[path.length - 1]];
+  }
+
+  /* =====================================================================
+     DOM helper
+     ===================================================================== */
+  function h(tag, props) {
+    var e = document.createElement(tag);
+    Object.keys(props || {}).forEach(function (k) {
+      var v = props[k];
+      if (k === "class") e.className = v;
+      else if (k === "text") e.textContent = v;
+      else if (k.slice(0, 2) === "on") e.addEventListener(k.slice(2), v);
+      else if (v === true) e.setAttribute(k, "");
+      else if (v !== false && v != null) e.setAttribute(k, v);
+    });
+    Array.prototype.slice.call(arguments, 2).forEach(function add(kid) {
+      if (kid == null || kid === false) return;
+      if (Array.isArray(kid)) { kid.forEach(add); return; }
+      e.append(kid.nodeType ? kid : document.createTextNode(kid));
+    });
+    return e;
+  }
+
+  var uidN = 0;
+  function wrap(label, control, hint) {
+    var id = "f" + (++uidN);
+    var inp = control.matches("input,select,textarea") ? control : control.querySelector("input,select,textarea");
+    if (inp) inp.id = id;
+    return h("div", { class: "fld" },
+      h("label", { for: id, text: label }), control,
+      hint ? h("small", { class: "fld-h", text: hint }) : null);
+  }
+
+  /* ---------- kolom isian ---------- */
+  function txt(path, label, o) {
+    o = o || {};
+    var c = o.multi ? h("textarea", { rows: o.rows || 3, spellcheck: "false" }) : h("input", { type: "text", spellcheck: "false", autocomplete: "off" });
+    var v = g.apply(null, path);
+    c.value = v == null ? "" : v;
+    if (o.placeholder) c.placeholder = o.placeholder;
+    if (o.list) c.setAttribute("list", o.list);
+    c.addEventListener("input", function () { put(path, c.value); changed(); });
+    var w = wrap(label, c, o.hint);
+    if (o.key) w.setAttribute("data-key", o.key);
+    return w;
+  }
+  function chk(path, label, o) {
+    o = o || {};
+    var c = h("input", { type: "checkbox" });
+    var v = g.apply(null, path);
+    c.checked = v === undefined ? o.def === true : !!v;
+    c.addEventListener("change", function () { put(path, c.checked); changed(); });
+    return h("label", { class: "chk" }, c, h("span", { text: label }));
+  }
+  function sel(path, label, opts, o) {
+    o = o || {};
+    var c = h("select");
+    opts.forEach(function (p) { c.append(h("option", { value: p[0], text: p[1] })); });
+    var v = g.apply(null, path);
+    c.value = String(v == null ? opts[0][0] : v);
+    c.addEventListener("change", function () { put(path, o.num ? Number(c.value) : c.value); changed(); });
+    return wrap(label, c, o.hint);
+  }
+  function toHex(s) {
+    s = String(s || "").trim();
+    if (/^#[0-9a-f]{6}$/i.test(s)) return s;
+    if (/^#[0-9a-f]{3}$/i.test(s)) return "#" + s.slice(1).split("").map(function (ch) { return ch + ch; }).join("");
+    return "";
+  }
+  function colorf(path, label, hint) {
+    var t = h("input", { type: "text", placeholder: "bawaan", spellcheck: "false" });
+    t.value = g.apply(null, path) || "";
+    var p = h("input", { type: "color" });
+    p.value = toHex(t.value) || "#808080";
+    p.addEventListener("input", function () { t.value = p.value; put(path, p.value); changed(); });
+    t.addEventListener("input", function () { put(path, t.value.trim()); var x = toHex(t.value); if (x) p.value = x; changed(); });
+    var x = h("button", { type: "button", class: "mini", title: "Kosongkan (pakai warna bawaan)", text: "✕",
+      onclick: function () { t.value = ""; put(path, ""); changed(); } });
+    return wrap(label, h("div", { class: "color-row" }, p, t, x), hint);
+  }
+
+  function group(title, note) {
+    var kids = Array.prototype.slice.call(arguments, 2);
+    return h("section", { class: "grp" }, h("h3", { text: title }), note ? h("p", { class: "note", text: note }) : null, kids);
+  }
+
+  /* ---------- daftar (tambah / hapus / urutkan) ---------- */
+  function move(arrPath, i, d) {
+    var a = g.apply(null, arrPath), j = i + d;
+    if (!a || j < 0 || j >= a.length) return;
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+    changed(); renderPanel();
+  }
+  function removeAt(arrPath, i) { g.apply(null, arrPath).splice(i, 1); changed(); renderPanel(); }
+  function acts(arrPath, i, len) {
+    return h("div", { class: "acts" },
+      h("button", { type: "button", class: "mini", title: "Naik", disabled: i === 0, text: "↑", onclick: function () { move(arrPath, i, -1); } }),
+      h("button", { type: "button", class: "mini", title: "Turun", disabled: i === len - 1, text: "↓", onclick: function () { move(arrPath, i, 1); } }),
+      h("button", { type: "button", class: "mini bad", title: "Hapus", text: "✕", onclick: function () { removeAt(arrPath, i); } }));
+  }
+  function addBtn(label, fn) { return h("button", { type: "button", class: "add", text: label, onclick: fn }); }
+  function pushTo(arrPath, item) {
+    var a = g.apply(null, arrPath);
+    if (!Array.isArray(a)) { a = []; put(arrPath, a); }
+    a.push(item); changed(); renderPanel();
+  }
+
+  /* =====================================================================
+     TAB: HEADER
+     ===================================================================== */
+  function alsoField(path) {
+    var c = h("input", { type: "text", spellcheck: "false", placeholder: "mis. service-detail.html, detail.html" });
+    c.value = (g.apply(null, path) || []).join(", ");
+    c.addEventListener("input", function () {
+      var v = c.value.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+      if (v.length) put(path, v); else del(path);
+      changed();
+    });
+    return wrap("Halaman turunan (pisahkan koma)", c, "Menu ini tetap menyala di halaman-halaman tersebut.");
+  }
+
+  function keyed(el, key) { el.setAttribute("data-key", key); return el; }
+
+  function menuRow(m, i, total) {
+    var base = ["header", "menu", i];
+    var kids = (m.dropdown && m.dropdown.items) || [];
+    return keyed(h("div", { class: "row" },
+      h("div", { class: "row-head" }, h("span", { class: "row-n", text: "Menu " + (i + 1) }), acts(["header", "menu"], i, total)),
+      h("div", { class: "grid2" }, txt(base.concat("label"), "Teks"), txt(base.concat("href"), "Link")),
+      alsoField(base.concat("also")),
+      chk(base.concat("external"), "Buka di tab baru (link ke website luar)"),
+      h("div", { class: "sub-row" },
+        chk(base.concat("dropdown", "show"), "Aktifkan dropdown (submenu)"),
+        kids.map(function (it, j) {
+          var ip = base.concat("dropdown", "items", j);
+          return keyed(h("div", { class: "sub-row" },
+            h("div", { class: "row-head" }, h("span", { class: "row-n", text: "Submenu " + (j + 1) }), acts(base.concat("dropdown", "items"), j, kids.length)),
+            h("div", { class: "grid2" }, txt(ip.concat("label"), "Teks"), txt(ip.concat("href"), "Link"))), "header.menu." + i + ".dropdown.items." + j);
+        }),
+        addBtn("+ Tambah submenu", function () { pushTo(base.concat("dropdown", "items"), { label: "Submenu baru", href: "#" }); }))), "header.menu." + i);
+  }
+
+  function tabHeader() {
+    var menu = g("header", "menu") || [];
+    return [
+      keyed(group("Logo", "Alamat gambar dihitung dari folder headerfooter (mis. assets/logo/fixsarts.png) atau URL penuh. Kosong / gagal dimuat → otomatis jadi teks.",
+        txt(["header", "brand", "logoUrl"], "File logo"),
+        txt(["header", "brand", "logoHeight"], "Tinggi logo", { placeholder: "32px" }),
+        h("div", { class: "grid2" }, txt(["header", "brand", "main"], "Teks cadangan"), txt(["header", "brand", "accent"], "Teks aksen (berwarna)")),
+        txt(["header", "brand", "href"], "Link saat diklik")), "header.brand"),
+      keyed(group("Latar header", "Otomatis: di website berlatar putih header jadi hitam solid (tanpa blur, supaya logo yang punya background tidak nabrak); di website gelap tetap kaca/blur. Gunakan tombol \"Halaman putih\" di atas preview untuk mengecek.",
+        sel(["header", "style", "mode"], "Mode", [["auto", "Otomatis"], ["solid", "Selalu hitam solid"], ["glass", "Kaca / blur"]]),
+        colorf(["header", "style", "background"], "Warna latar header", "Samakan dengan background logo (mis. #000000 untuk GIF berlatar hitam). Kosong = #0A0A0D.")), "header.style"),
+      group("Link header", "Kalau aktif, SEMUA link di header (logo, menu, submenu, keranjang) tidak bisa diklik. Berguna untuk maintenance atau mockup.",
+        chk(["header", "disableLinks"], "Nonaktifkan semua link header")),
+      group("Menu utama", "Tiap menu bisa punya dropdown. Matikan centangnya untuk menyembunyikan dropdown tanpa menghapus isinya.",
+        menu.map(function (m, i) { return menuRow(m, i, menu.length); }),
+        addBtn("+ Tambah menu", function () { pushTo(["header", "menu"], { label: "Menu baru", href: "#" }); })),
+      keyed(group("Kolom pencarian", null,
+        chk(["header", "search", "show"], "Tampilkan kolom pencarian", { def: true }),
+        txt(["header", "search", "icon"], "File ikon", { placeholder: "assets/icon/search.png" }),
+        txt(["header", "search", "emoji"], "Emoji cadangan"),
+        txt(["header", "search", "placeholder"], "Teks placeholder"),
+        h("div", { class: "grid2" }, txt(["header", "search", "action"], "Dikirim ke halaman"), txt(["header", "search", "label"], "Label (screen reader)"))), "header.search"),
+      keyed(group("Tombol pojok kanan", "Pilih salah satu: keranjang, atau tombol hamburger yang membuka panel berisi menu yang sama.",
+        sel(["header", "rightButton", "mode"], "Mode", [["cart", "Keranjang"], ["hamburger", "Hamburger menu"], ["none", "Tidak ada"]],
+          { hint: "Mode hamburger: menu bar tetap tampil di desktop, tombol hamburger menggantikan keranjang dan membuka panel berisi menu yang sama. Mau tetap ada akses keranjang? Tambahkan menu \"Keranjang\" → cart.html." }),
+        h("div", { class: "grid2" }, txt(["header", "cart", "href"], "Link keranjang"), txt(["header", "cart", "label"], "Label (screen reader)")),
+        txt(["header", "cart", "icon"], "File ikon keranjang", { placeholder: "assets/icon/cart.png" }),
+        txt(["header", "cart", "emoji"], "Emoji cadangan"),
+        txt(["header", "toggleLabel"], "Label tombol hamburger")), "header.rightButton"),
+      group("Ikon", null, txt(["header", "iconSize"], "Ukuran ikon (search & keranjang)", { placeholder: "20px" }))
+    ];
+  }
+
+  /* =====================================================================
+     TAB: FOOTER
+     ===================================================================== */
+  function iconsEditor() {
+    var icons = g("footer", "icons") || {};
+    var entries = Object.keys(icons).map(function (k) { return [k, icons[k]]; });
+    var rows = entries.map(function (en, i) {
+      var name = h("input", { type: "text", spellcheck: "false", "aria-label": "Nama ikon" }); name.value = en[0];
+      var path = h("input", { type: "text", spellcheck: "false", "aria-label": "File ikon" }); path.value = en[1];
+      name.addEventListener("change", function () {
+        var nn = name.value.trim().replace(/\s+/g, "");
+        if (!nn || (nn !== en[0] && icons[nn] !== undefined)) { name.value = en[0]; toast("Nama ikon harus unik dan tidak kosong"); return; }
+        var cur = Object.keys(g("footer", "icons")).map(function (k) { return [k, g("footer", "icons", k)]; });
+        cur[i][0] = nn;
+        var o = {}; cur.forEach(function (p) { o[p[0]] = p[1]; });
+        put(["footer", "icons"], o); changed(); renderPanel();
+      });
+      path.addEventListener("input", function () { put(["footer", "icons", en[0]], path.value); changed(); });
+      return h("div", { class: "kv" }, name, path,
+        h("button", { type: "button", class: "mini bad", title: "Hapus ikon", text: "✕", onclick: function () { del(["footer", "icons", en[0]]); changed(); renderPanel(); } }));
+    });
+    return [
+      rows,
+      addBtn("+ Tambah ikon", function () {
+        var n = 1, name; do { name = "ikon" + n++; } while (icons[name] !== undefined);
+        put(["footer", "icons", name], "assets/Icon/" + name + ".png"); changed(); renderPanel();
+      })
+    ];
+  }
+
+  function columnEditor(col, ci, total) {
+    var base = ["footer", "columns", ci];
+    var isLines = Array.isArray(col.lines) && !Array.isArray(col.links);
+    var listKey = isLines ? "lines" : "links";
+    var items = col[listKey] || [];
+    var rows = items.map(function (it, j) {
+      var ip = base.concat(listKey, j);
+      var k = "footer.columns." + ci + "." + listKey + "." + j;
+      if (isLines) {
+        return keyed(h("div", { class: "sub-row" },
+          h("div", { class: "row-head" }, h("span", { class: "row-n", text: "Baris " + (j + 1) }), acts(base.concat(listKey), j, items.length)),
+          txt(ip, "Teks")), k);
+      }
+      return keyed(h("div", { class: "sub-row" },
+        h("div", { class: "row-head" }, h("span", { class: "row-n", text: "Link " + (j + 1) }), acts(base.concat(listKey), j, items.length)),
+        txt(ip.concat("label"), "Teks"),
+        txt(ip.concat("href"), "Link tujuan"),
+        h("div", { class: "grid2" },
+          txt(ip.concat("icon"), "Ikon kecil (opsional)", { list: "iconNames", placeholder: "nama ikon / emoji" }),
+          h("div", { style: "padding-top:22px" }, chk(ip.concat("external"), "Buka di tab baru")))), k);
+    });
+    return keyed(h("div", { class: "row" },
+      h("div", { class: "row-head" }, h("span", { class: "row-n", text: "Kolom " + (ci + 1) + (isLines ? " · teks" : " · link") }), acts(["footer", "columns"], ci, total)),
+      txt(base.concat("title"), "Judul kolom"),
+      rows,
+      addBtn(isLines ? "+ Tambah baris" : "+ Tambah link", function () {
+        pushTo(base.concat(listKey), isLines ? "Teks baru" : { label: "Link baru", href: "#" });
+      })), "footer.columns." + ci);
+  }
+
+  var SOCIAL_NAMES = [["instagram", "Instagram"], ["whatsapp", "WhatsApp"], ["tiktok", "TikTok"], ["email", "Email / Gmail"],
+    ["website", "Website"], ["facebook", "Facebook"], ["youtube", "YouTube"], ["x", "X (Twitter)"], ["linkedin", "LinkedIn"], ["telegram", "Telegram"]];
+
+  function socialEditor() {
+    var items = g("footer", "social", "items") || [];
+    return [
+      chk(["footer", "social", "show"], "Tampilkan ikon sosial media", { def: true }),
+      h("div", { class: "grid2" },
+        sel(["footer", "social", "shape"], "Bentuk", [["circle", "Bulat"], ["rounded", "Kotak membulat"], ["plain", "Tanpa bingkai"]]),
+        txt(["footer", "social", "size"], "Ukuran tombol", { placeholder: "44px" })),
+      items.map(function (it, i) {
+        var base = ["footer", "social", "items", i];
+        return keyed(h("div", { class: "row" },
+          h("div", { class: "row-head" }, h("span", { class: "row-n", text: "Ikon " + (i + 1) + " · " + (it.label || it.name || "") }), acts(["footer", "social", "items"], i, items.length)),
+          h("div", { class: "grid2" }, sel(base.concat("name"), "Ikon", SOCIAL_NAMES), txt(base.concat("label"), "Nama (tooltip)")),
+          txt(base.concat("href"), "Link tujuan", { placeholder: "https://..." }),
+          h("div", { class: "grid2" }, chk(base.concat("show"), "Tampilkan", { def: true }), chk(base.concat("link"), "Link aktif (bisa diklik)", { def: true })),
+          txt(base.concat("icon"), "Gambar ikon sendiri (opsional)", { placeholder: "kosong = ikon bawaan" })), "footer.social.items." + i);
+      }),
+      addBtn("+ Tambah ikon sosial media", function () { pushTo(["footer", "social", "items"], { name: "website", label: "Website", href: "https://", show: true, link: true }); })
+    ];
+  }
+
+  function tabFooter() {
+    var cols = g("footer", "columns") || [];
+    var iconNames = Object.keys(g("footer", "icons") || {});
+    return [
+      h("datalist", { id: "iconNames" }, iconNames.map(function (n) { return h("option", { value: n }); })),
+      keyed(group("Brand (kolom kiri)", "Teks boleh diisi langsung, atau pakai @kunci agar ikut berganti bahasa (kunci diatur di tab Bahasa).",
+        txt(["footer", "brand", "logoUrl"], "Logo untuk latar GELAP", { hint: "Alamat dihitung dari folder headerfooter, atau URL penuh. Kosong / gagal dimuat → jadi teks." }),
+        txt(["footer", "brand", "logoUrlLight"], "Logo untuk latar TERANG"),
+        txt(["footer", "brand", "logoHeight"], "Tinggi logo", { placeholder: "50px" }),
+        h("div", { class: "grid2" }, txt(["footer", "brand", "textMain"], "Teks cadangan"), txt(["footer", "brand", "textAccent"], "Teks aksen")),
+        txt(["footer", "brand", "href"], "Link saat logo diklik"),
+        txt(["footer", "brand", "description"], "Deskripsi", { multi: true, rows: 3, hint: "mis. @tagline", key: "footer.brand.description" })), "footer.brand"),
+      keyed(group("Sosial media (ikon saja)", "Satu baris ikon di bawah deskripsi, tanpa teks. Tiap ikon punya on/off Tampilkan dan on/off Link.",
+        socialEditor()), "footer.social"),
+      group("Kolom menu", "Urutan kolom = urutan tampil. Layout menyesuaikan jumlah kolom otomatis.",
+        cols.map(function (c, i) { return columnEditor(c, i, cols.length); }),
+        h("div", { class: "btns" },
+          addBtn("+ Kolom link", function () { pushTo(["footer", "columns"], { title: "Kolom baru", links: [{ label: "Link baru", href: "#" }] }); }),
+          addBtn("+ Kolom teks", function () { pushTo(["footer", "columns"], { title: "Kolom baru", lines: ["Teks baru"] }); }))),
+      group("Ikon link kolom (opsional)", "Untuk link di kolom menu yang ingin diberi ikon kecil. Daftarkan ikon (nama → file PNG), lalu pilih namanya di kolom link. Warna PNG diubah otomatis.",
+        iconsEditor(),
+        sel(["footer", "iconColor"], "Warna ikon PNG", [["auto", "Otomatis (ikut latar)"], ["white", "Selalu putih"], ["black", "Selalu hitam"], ["original", "Warna asli file"]])),
+      keyed(group("Bar bawah", "{year} otomatis diganti tahun sekarang.",
+        txt(["footer", "bottom", "copyright"], "Copyright", { multi: true, rows: 2, hint: "mis. @copyright" }),
+        txt(["footer", "bottom", "note"], "Catatan kecil (boleh kosong)")), "footer.bottom")
+    ];
+  }
+
+  /* =====================================================================
+     TAB: BAHASA
+     ===================================================================== */
+  function ensureLang(code) {
+    if (!code) return;
+    if (!g("footer", "texts")) put(["footer", "texts"], {});
+    if (!g("footer", "texts", code)) put(["footer", "texts", code], {});
+  }
+  function keyUsage(key) {
+    var f = clone(state.footer); delete f.texts;
+    var s = JSON.stringify(f), n = 0, at = '"@' + key + '"', i = -1;
+    while ((i = s.indexOf(at, i + 1)) !== -1) n++;
+    return n;
+  }
+
+  function textsEditor() {
+    var list = g("footer", "language", "list") || [];
+    var codes = list.map(function (l) { return l.code; });
+    var dflt = g("footer", "language", "default") || codes[0];
+    if (!ui.lang || codes.indexOf(ui.lang) === -1) ui.lang = dflt;
+    var T = g("footer", "texts") || {};
+
+    var picker = h("select");
+    list.forEach(function (l) { picker.append(h("option", { value: l.code, text: l.flag + " | " + l.name + "  (" + l.code + ")" })); });
+    picker.value = ui.lang;
+    picker.addEventListener("change", function () { ui.lang = picker.value; renderPanel(); });
+
+    var keys = [];
+    [dflt].concat(Object.keys(T)).forEach(function (code) {
+      Object.keys(T[code] || {}).forEach(function (k) { if (keys.indexOf(k) === -1) keys.push(k); });
+    });
+
+    var rows = keys.map(function (k) {
+      var cur = (T[ui.lang] || {})[k];
+      var area = h("textarea", { spellcheck: "false", rows: Math.min(4, Math.max(1, Math.ceil(String(cur || "").length / 44))) });
+      area.value = cur == null ? "" : cur;
+      if (ui.lang !== dflt) area.placeholder = (T[dflt] || {})[k] || "";
+      area.addEventListener("input", function () {
+        ensureLang(ui.lang);
+        if (area.value === "" && ui.lang !== dflt) del(["footer", "texts", ui.lang, k]);   // kosong → otomatis pakai bahasa default
+        else put(["footer", "texts", ui.lang, k], area.value);
+        changed();
+      });
+      return h("div", { class: "fld" },
+        h("div", { class: "tkey" }, h("span", { text: "@" + k }),
+          h("button", { type: "button", class: "mini bad", title: "Hapus kunci ini dari semua bahasa", text: "✕", onclick: function () {
+            var n = keyUsage(k);
+            if (!confirm("Hapus kunci @" + k + " dari semua bahasa?" + (n ? "\n\nKunci ini masih dipakai di " + n + " tempat (akan tampil sebagai nama kuncinya)." : ""))) return;
+            Object.keys(state.footer.texts || {}).forEach(function (c) { delete state.footer.texts[c][k]; });
+            changed(); renderPanel();
+          } })),
+        area);
+    });
+
+    var newKey = h("input", { type: "text", placeholder: "kunci baru, mis. hours", spellcheck: "false", "aria-label": "Nama kunci baru" });
+    var addKey = function () {
+      var k = newKey.value.trim();
+      if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(k)) { toast("Kunci: huruf/angka/_ saja, diawali huruf"); return; }
+      if (keys.indexOf(k) !== -1) { toast("Kunci itu sudah ada"); return; }
+      ensureLang(dflt); put(["footer", "texts", dflt, k], "Teks baru");
+      changed(); renderPanel();
+    };
+    newKey.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); addKey(); } });
+
+    return [
+      wrap("Bahasa yang diedit", picker, ui.lang === dflt ? "Ini bahasa default." : "Kolom kosong = otomatis memakai bahasa default (tampil sebagai placeholder abu-abu)."),
+      rows,
+      h("div", { class: "kv", style: "grid-template-columns:1fr auto" }, newKey, h("button", { type: "button", class: "btn", text: "+ Kunci", onclick: addKey })),
+      h("p", { class: "note", style: "font-size:.76rem;color:var(--faint);margin:6px 0 0" }, "Pakai kunci di tab Footer dengan awalan @ (mis. ", h("code", { text: "@" + (keys[0] || "kunci") }), ").")
+    ];
+  }
+
+  function tabLang() {
+    var list = g("footer", "language", "list") || [];
+    var codes = list.map(function (l) { return [l.code, l.flag + " | " + l.name]; });
+    return [
+      keyed(group("Dropdown bahasa", null,
+        chk(["footer", "language", "show"], "Tampilkan dropdown bahasa", { def: true }),
+        codes.length ? sel(["footer", "language", "default"], "Bahasa awal", codes) : null,
+        chk(["footer", "language", "remember"], "Ingat pilihan pengunjung", { def: true }),
+        chk(["footer", "language", "autoDetect"], "Pilih otomatis sesuai bahasa browser")), "footer.language"),
+      group("Daftar bahasa", "Urutan = urutan di dropdown. Kode memakai standar 2 huruf (id, en, ja, ...).",
+        list.map(function (l, i) {
+          var base = ["footer", "language", "list", i];
+          var code = txt(base.concat("code"), "Kode");
+          code.querySelector("input").addEventListener("change", function (e) { ensureLang(e.target.value.trim()); renderPanel(); });
+          return h("div", { class: "row" },
+            h("div", { class: "row-head" }, h("span", { class: "row-n", text: "Bahasa " + (i + 1) }), acts(["footer", "language", "list"], i, list.length)),
+            h("div", { class: "grid2" }, code, txt(base.concat("flag"), "Label singkat", { placeholder: "ID" })),
+            txt(base.concat("name"), "Nama"));
+        }),
+        addBtn("+ Tambah bahasa", function () {
+          var n = 1, code; var used = list.map(function (l) { return l.code; });
+          do { code = "xx" + (n > 1 ? n : ""); n++; } while (used.indexOf(code) !== -1);
+          ensureLang(code);
+          pushTo(["footer", "language", "list"], { code: code, flag: "XX", name: "Bahasa baru" });
+        })),
+      group("Teks terjemahan", "Semua kata di footer yang berawalan @ diambil dari sini.", textsEditor())
+    ];
+  }
+
+  /* =====================================================================
+     TAB: TAMPILAN
+     ===================================================================== */
+  function tabLook() {
+    return [
+      group("Tema footer", "Kosongkan kolom warna untuk memakai warna bawaan. Ikon & logo menyesuaikan terang/gelapnya latar otomatis.",
+        sel(["footer", "theme", "mode"], "Mode", [["dark", "Gelap"], ["light", "Terang"]]),
+        colorf(["footer", "theme", "background"], "Warna latar"),
+        colorf(["footer", "theme", "text"], "Warna teks utama"),
+        colorf(["footer", "theme", "muted"], "Warna teks sekunder"),
+        colorf(["footer", "theme", "faint"], "Warna teks samar (judul kolom)"),
+        colorf(["footer", "theme", "border"], "Warna garis"),
+        colorf(["footer", "theme", "accent"], "Warna aksen")),
+      group("Layout footer", null,
+        h("div", { class: "grid2" },
+          txt(["footer", "layout", "maxWidth"], "Lebar maksimum", { placeholder: "1240px" }),
+          txt(["footer", "layout", "iconSize"], "Ukuran ikon", { placeholder: "20px" })),
+        txt(["footer", "layout", "brandWeight"], "Lebar kolom brand (desktop)", { placeholder: "1.4fr", hint: "Perbandingan lebar kolom brand vs kolom link, mis. 1fr atau 2fr." }),
+        h("div", { class: "grid2" },
+          sel(["footer", "layout", "mobileColumns"], "Kolom link di HP", [["1", "1 (ditumpuk)"], ["2", "2 (berdampingan)"]], { num: true }),
+          sel(["footer", "layout", "mobileAlign"], "Rata teks di HP", [["left", "Kiri"], ["center", "Tengah"]])),
+        chk(["footer", "layout", "showBrand"], "Tampilkan kolom brand", { def: true }),
+        chk(["footer", "layout", "showBottomBar"], "Tampilkan bar bawah (copyright + bahasa)", { def: true }))
+    ];
+  }
+
+  /* =====================================================================
+     TAB: PASANG
+     ===================================================================== */
+  function js(v, ind) {
+    var pad = new Array(ind + 1).join("  "), pad1 = new Array(ind + 2).join("  ");
+    if (v === null || typeof v !== "object") return JSON.stringify(v);
+    if (Array.isArray(v)) {
+      if (!v.length) return "[]";
+      var items = v.map(function (x) { return js(x, ind + 1); });
+      var one = "[" + items.join(", ") + "]";
+      if (one.length <= 90 && one.indexOf("\n") === -1) return one;
+      return "[\n" + items.map(function (s) { return pad1 + s; }).join(",\n") + "\n" + pad + "]";
+    }
+    var parts = Object.keys(v).filter(function (k) { return v[k] !== undefined; }).map(function (k) {
+      return (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(k) ? k : JSON.stringify(k)) + ": " + js(v[k], ind + 1);
+    });
+    if (!parts.length) return "{}";
+    var o = "{ " + parts.join(", ") + " }";
+    if (o.length <= 100 && o.indexOf("\n") === -1) return o;
+    return "{\n" + parts.map(function (s) { return pad1 + s; }).join(",\n") + "\n" + pad + "}";
+  }
+
+  function configCode() {
+    return "/**\n" +
+      " * HEADER + FOOTER — headerfooter-config.js\n" +
+      " * File ini dihasilkan oleh demo.html. Cara termudah mengubahnya: buka demo.html,\n" +
+      " * atur sampai pas, lalu unduh ulang file ini dan timpa yang lama. (Boleh juga diedit manual.)\n" +
+      " *\n" +
+      " * Pasang di halaman:\n" +
+      " *   <link rel=\"stylesheet\" href=\"components/headerfooter/headerfooter.css\">\n" +
+      " *   <header data-site-header></header>\n" +
+      " *   <script src=\"components/headerfooter/headerfooter-config.js\"><\/script>\n" +
+      " *   <script src=\"components/headerfooter/headerfooter.js\"><\/script>\n" +
+      " *   ...\n" +
+      " *   <footer data-site-footer></footer>\n" +
+      " */\n\n" +
+      "/* ===== HEADER ===== */\nwindow.HeaderConfig = " + js(state.header, 0) + ";\n\n" +
+      "/* ===== FOOTER ===== */\nwindow.FooterConfig = " + js(state.footer, 0) + ";\n";
+  }
+
+  function snippetCode() {
+    var b = ui.base.replace(/\/*$/, "/");
+    return "<!-- 1) di <head> -->\n<link rel=\"stylesheet\" href=\"" + b + "headerfooter.css\">\n\n" +
+      "<!-- 2) di <body>, paling atas -->\n<header data-site-header></header>\n" +
+      "<script src=\"" + b + "headerfooter-config.js\"><\/script>\n" +
+      "<script src=\"" + b + "headerfooter.js\"><\/script>\n\n" +
+      "<!-- 3) di bagian bawah halaman -->\n<footer data-site-footer></footer>";
+  }
+
+  function codeBox(id, rows) { return h("textarea", { id: id, class: "code", readonly: true, rows: rows, spellcheck: "false", wrap: "off" }); }
+
+  function tabInstall() {
+    var snip = codeBox("snipBox", 11), cfg = codeBox("cfgBox", 16);
+    var base = h("input", { type: "text", spellcheck: "false" });
+    base.value = ui.base;
+    base.addEventListener("input", function () { ui.base = base.value.trim() || DEFAULT_BASE; snip.value = snippetCode(); saveDraft(); });
+    snip.value = snippetCode();
+    cfg.value = configCode();
+    return [
+      group("Terapkan perubahan ke website ini", null,
+        h("ol", { class: "steps" },
+          h("li", null, "Atur semuanya di tab lain, cek di preview."),
+          h("li", null, "Klik ", h("b", { text: "Unduh headerfooter-config.js" }), " (tombol di atas)."),
+          h("li", null, "Timpa file ", h("code", { text: "components/headerfooter/headerfooter-config.js" }), " di repo, lalu commit &amp; push.".replace("&amp;", "&")))),
+      group("Pasang di website LAIN", "Tidak perlu menyalin file apa pun: cukup tempel kode ini. Karena config dibaca dari alamat di bawah, mengubah config sekali akan mengubah semua website yang memasangnya.",
+        wrap("Alamat folder headerfooter (hosting)", base, "Harus bisa diakses publik, mis. GitHub Pages."),
+        snip,
+        h("div", { class: "btns", style: "margin-top:8px" }, h("button", { type: "button", class: "btn", text: "Salin kode pasang", onclick: function () { copy(snip.value, "Kode pasang disalin"); } }))),
+      group("Isi headerfooter-config.js (hasil dari pengaturan sekarang)", null,
+        cfg,
+        h("div", { class: "btns", style: "margin-top:8px" },
+          h("button", { type: "button", class: "btn", text: "Salin", onclick: function () { copy(cfg.value, "Config disalin"); } }),
+          h("button", { type: "button", class: "btn primary", text: "Unduh .js", onclick: download })))
+    ];
+  }
+
+  /* =====================================================================
+     RENDER PANEL & TABS
+     ===================================================================== */
+  var TABS = [
+    ["header", "Header", tabHeader], ["footer", "Footer", tabFooter],
+    ["lang", "Bahasa", tabLang], ["look", "Tampilan", tabLook], ["install", "Pasang", tabInstall]
+  ];
+
+  function renderTabs() {
+    var nav = $("#tabs"); nav.textContent = "";
+    TABS.forEach(function (t) {
+      nav.append(h("button", { type: "button", class: "tab", role: "tab", "aria-selected": String(ui.tab === t[0]), text: t[1],
+        onclick: function () { ui.tab = t[0]; panelBody.scrollTop = 0; renderTabs(); renderPanel(); } }));
+    });
+  }
+  function renderPanel() {
+    var top = panelBody.scrollTop;
+    var build = TABS.filter(function (t) { return t[0] === ui.tab; })[0][2];
+    panelBody.textContent = "";
+    panelBody.append.apply(panelBody, [].concat(build()).filter(Boolean));
+    panelBody.scrollTop = top;
+  }
+
+  /* =====================================================================
+     DRAFT, STATUS, ACTIONS
+     ===================================================================== */
+  var timer;
+  function isDirty() { return JSON.stringify([state.header, state.footer]) !== FILE_SIG; }
+  function updateChip() {
+    var d = isDirty(), c = $("#chip");
+    c.textContent = d ? "Ada perubahan (draft di browser ini)" : "Sama dengan file";
+    c.classList.toggle("dirty", d);
+  }
+  function saveDraft() {
+    try {
+      if (isDirty() || ui.target || !ui.edit || ui.page !== "dark") localStorage.setItem(LS_KEY, JSON.stringify({ sig: FILE_SIG, state: state, target: ui.target, base: ui.base, device: ui.device, edit: ui.edit, page: ui.page }));
+      else localStorage.removeItem(LS_KEY);
+    } catch (e) { /* abaikan */ }
+  }
+  function changed() {
+    updateChip();
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      sendConfig(); saveDraft();
+      if (ui.tab === "install") { var c = $("#cfgBox"); if (c) c.value = configCode(); }
+    }, 120);
+  }
+
+  function toast(msg) {
+    var t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast.t); toast.t = setTimeout(function () { t.classList.remove("show"); }, 2300);
+  }
+  function copy(text, msg) {
+    function fallback() {
+      var ta = h("textarea", { style: "position:fixed;opacity:0" }); ta.value = text; document.body.append(ta); ta.select();
+      try { document.execCommand("copy"); toast(msg); } catch (e) { toast("Gagal menyalin"); }
+      ta.remove();
+    }
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(function () { toast(msg); }, fallback);
+    else fallback();
+  }
+  function download() {
+    var blob = new Blob([configCode()], { type: "text/javascript;charset=utf-8" });
+    var a = h("a", { href: URL.createObjectURL(blob), download: "headerfooter-config.js" });
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    toast("headerfooter-config.js diunduh — timpa file lama di repo");
+  }
+
+  $("#btnCopy").addEventListener("click", function () { copy(configCode(), "Config disalin"); });
+  $("#btnDownload").addEventListener("click", download);
+  $("#btnReset").addEventListener("click", function () {
+    if (!isDirty()) { toast("Sudah sama dengan file"); return; }
+    if (!confirm("Buang semua perubahan dan kembali ke isi headerfooter-config.js?")) return;
+    state = { header: clone(FILE_H), footer: clone(FILE_F) };
+    ui.lang = null;
+    try { localStorage.removeItem(LS_KEY); } catch (e) {}
+    updateChip(); renderPanel(); sendConfig(); saveDraft();
+    toast("Dikembalikan ke isi file");
+  });
+
+  /* =====================================================================
+     PREVIEW (iframe)
+     Header + footer dirender di dalam iframe supaya media query-nya
+     mengikuti lebar Desktop / Tablet / HP yang dipilih.
+     ===================================================================== */
+  var frame = $("#frame");
+
+  // Kode ini berjalan DI DALAM iframe preview.
+  function frameMain() {
+    var edit = false, selected = "", tip = null;
+    var NAMES = [
+      [/^header\.brand$/, "Logo"], [/^header\.menu\.\d+\.dropdown\.items\.\d+$/, "Submenu"], [/^header\.menu\.\d+$/, "Menu"],
+      [/^header\.search$/, "Pencarian"], [/^header\.(cart|rightButton)$/, "Tombol kanan"],
+      [/^footer\.brand\.description$/, "Deskripsi"], [/^footer\.brand$/, "Logo footer"], [/^footer\.social\.items\.\d+$/, "Sosial media"],
+      [/^footer\.columns\.\d+\.(links|lines)\.\d+$/, "Link / teks"], [/^footer\.columns\.\d+$/, "Kolom"],
+      [/^footer\.bottom$/, "Copyright"], [/^footer\.language$/, "Bahasa"]
+    ];
+    function q(s) { return document.querySelector(s); }
+    function nameOf(k) { for (var i = 0; i < NAMES.length; i++) if (NAMES[i][0].test(k)) return NAMES[i][1]; return k; }
+    function keyEl(node) { return node && node.closest ? node.closest("[data-hf-key]") : null; }
+
+    function markActive() {
+      var a = q(".hf-nav-menu a");
+      if (a) { a.classList.add("active"); a.setAttribute("aria-current", "page"); }
+    }
+    function paint() {                                    // tandai elemen yang sedang dipilih
+      Array.prototype.forEach.call(document.querySelectorAll(".hf-sel"), function (e) { e.classList.remove("hf-sel"); });
+      if (!selected) return;
+      var els = document.querySelectorAll('[data-hf-key="' + selected + '"]');
+      if (els.length) els[0].classList.add("hf-sel");
+    }
+    function setEdit(on) {
+      edit = !!on;
+      document.documentElement.classList.toggle("hf-edit", edit);
+      if (!edit) hover(null);
+    }
+    function hover(el) {
+      Array.prototype.forEach.call(document.querySelectorAll(".hf-hov"), function (e) { e.classList.remove("hf-hov"); });
+      if (!tip) { tip = document.createElement("div"); tip.id = "hfTip"; document.body.appendChild(tip); }
+      if (!el) { tip.style.display = "none"; return; }
+      el.classList.add("hf-hov");
+      var text = (el.textContent || "").replace(/\s+/g, " ").trim();
+      tip.textContent = "✎ " + nameOf(el.getAttribute("data-hf-key")) + (text ? " · " + text.slice(0, 28) : "");
+      var r = el.getBoundingClientRect();
+      tip.style.display = "block";
+      tip.style.left = Math.max(4, Math.min(r.left, window.innerWidth - 240)) + "px";
+      tip.style.top = (r.top > 34 ? r.top - 28 : r.bottom + 6) + "px";
+    }
+    function apply(m) {
+      if (m.header) window.HeaderConfig = m.header;
+      if (m.footer) window.FooterConfig = m.footer;
+      document.body.classList.toggle("light", !!m.pageLight);
+      document.documentElement.style.colorScheme = m.pageLight ? "light" : "dark";
+      Header.render(q("[data-site-header]"));
+      Footer.render(q("[data-site-footer]"), window.FooterConfig);
+      markActive(); paint();
+    }
+    function target(u) {
+      var f = q("#target");
+      if (u) { if (f.getAttribute("src") !== u) f.setAttribute("src", u); document.body.classList.add("has-target"); }
+      else { f.removeAttribute("src"); document.body.classList.remove("has-target"); }
+    }
+    window.addEventListener("message", function (e) {
+      if (e.source !== parent) return;
+      var m = e.data || {};
+      if (m.type === "hf-config") apply(m);
+      else if (m.type === "hf-target") target(m.url);
+      else if (m.type === "hf-edit") setEdit(m.on);
+      else if (m.type === "hf-select") { selected = m.key || ""; paint(); }
+    });
+    document.addEventListener("mouseover", function (e) { if (edit) hover(keyEl(e.target)); });
+    document.addEventListener("mouseout", function (e) { if (edit && !e.relatedTarget) hover(null); });
+    window.addEventListener("scroll", function () { if (edit) hover(null); }, true);
+    // capture: dijalankan lebih dulu dari handler header/footer
+    document.addEventListener("click", function (e) {
+      if (edit) {                                         // mode edit visual: klik = pilih bagian untuk diedit
+        e.preventDefault(); e.stopPropagation();
+        var el = keyEl(e.target);
+        if (el) { selected = el.getAttribute("data-hf-key"); paint(); parent.postMessage({ type: "hf-pick", key: selected }, "*"); }
+        return;
+      }
+      var a = e.target.closest && e.target.closest("a");  // mode biasa: link tidak boleh membuka halaman lain
+      if (!a) return;
+      e.preventDefault();
+      parent.postMessage({ type: "hf-link", href: a.getAttribute("href") || a.getAttribute("data-hf-href") || "" }, "*");
+    }, true);
+    markActive();
+    parent.postMessage({ type: "hf-ready" }, "*");
+  }
+
+  function safeJSON(x) { return JSON.stringify(x).replace(/</g, "\\u003c"); }
+
+  function buildFrameDoc() {
+    var css = "html{color-scheme:dark}html,body{margin:0}*{scrollbar-width:thin;scrollbar-color:#34343e transparent}" +
+      "body{background:#0A0A0D;color:#F4F4F6;font-family:Inter,system-ui,sans-serif;line-height:1.6}" +
+      "body.light{background:#FAFAFB;color:#16171B}" +
+      ".sample{max-width:1240px;margin:0 auto;padding:72px 28px;min-height:52vh}" +
+      ".sample h1{font-size:clamp(1.7rem,5vw,2.8rem);margin:0 0 12px;line-height:1.15}" +
+      ".sample p{margin:0;max-width:56ch;color:#9B9BA5}" +
+      "body.light .sample p{color:#5B5C66}" +
+      "#target{display:none;width:100%;height:max(560px,80vh);border:0;background:#fff}" +
+      "body.has-target .sample{display:none}body.has-target #target{display:block}" +
+      "html.hf-edit [data-hf-key]{cursor:pointer}" +
+      ".hf-hov{outline:2px dashed #6C7BFF!important;outline-offset:3px;border-radius:4px}" +
+      ".hf-sel{outline:2px solid #6C7BFF!important;outline-offset:3px;border-radius:4px;box-shadow:0 0 0 7px rgba(108,123,255,.18)}" +
+      "#hfTip{position:fixed;z-index:2147483647;display:none;background:#6C7BFF;color:#fff;font:600 11px/1 Inter,system-ui,sans-serif;padding:6px 9px;border-radius:7px;pointer-events:none;white-space:nowrap;max-width:300px;overflow:hidden;text-overflow:ellipsis;box-shadow:0 6px 18px rgba(0,0,0,.4)}";
+    var cssUrl = new URL("headerfooter.css", location.href).href;
+    var jsUrl = new URL("headerfooter.js", location.href).href;
+    return "<!DOCTYPE html><html lang=\"id\"><head><meta charset=\"utf-8\">" +
+      "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +
+      "<link rel=\"stylesheet\" href=\"" + cssUrl + "\"><style>" + css + "</style></head><body>" +
+      "<header data-site-header></header>" +
+      "<main><div class=\"sample\"><h1>Isi halaman website kamu</h1>" +
+      "<p>Ini contoh isi halaman. Scroll ke bawah untuk melihat footer. Tempel alamat website di kolom atas untuk melihat header &amp; footer ini di halaman website lain.</p></div>" +
+      "<iframe id=\"target\" title=\"Website target\" referrerpolicy=\"no-referrer\"></iframe></main>" +
+      "<footer data-site-footer></footer>" +
+      "<script>window.HeaderConfig=" + safeJSON(state.header) + ";window.FooterConfig=" + safeJSON(state.footer) + ";<\/script>" +
+      "<script src=\"" + jsUrl + "\"><\/script>" +
+      "<script>(" + frameMain.toString() + ")();<\/script></body></html>";
+  }
+
+  function post(m) { try { frame.contentWindow.postMessage(m, "*"); } catch (e) { /* abaikan */ } }
+  function sendConfig() {
+    post({ type: "hf-config", header: state.header, footer: state.footer, pageLight: ui.page === "light" });
+  }
+
+  window.addEventListener("message", function (e) {
+    if (e.source !== frame.contentWindow) return;
+    var m = e.data || {};
+    if (m.type === "hf-ready") { sendConfig(); post({ type: "hf-target", url: ui.target }); post({ type: "hf-edit", on: ui.edit }); }
+    else if (m.type === "hf-pick") selectKey(m.key);
+    else if (m.type === "hf-link") toast("Link “" + m.href + "” dinonaktifkan di preview");
+  });
+
+  /* ---------- edit visual: klik bagian di preview -> lompat ke pengaturannya ---------- */
+  var KEY_ALIAS = { "header.cart": "header.rightButton" };
+  function selectKey(key) {
+    var tab = /^footer\.language/.test(key) ? "lang" : /^footer/.test(key) ? "footer" : "header";
+    ui.tab = tab; renderTabs(); renderPanel();
+    var k = KEY_ALIAS[key] || key, el = null;
+    while (k) {
+      el = panelBody.querySelector('[data-key="' + k + '"]');
+      if (el) break;
+      var i = k.lastIndexOf(".");
+      if (i < 0) break;
+      k = k.slice(0, i);
+    }
+    if (!el) return;
+    el.scrollIntoView({ block: "center", behavior: "smooth" });
+    el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+    var inp = el.matches("input,select,textarea") ? el : el.querySelector("input[type=text],textarea,select");
+    if (inp) inp.focus({ preventScroll: true });
+    post({ type: "hf-select", key: key });
+  }
+  function setEdit(on) {
+    ui.edit = !!on;
+    var b = $("#editToggle");
+    b.setAttribute("aria-pressed", String(ui.edit));
+    b.querySelector("b").textContent = ui.edit ? "ON" : "OFF";
+    $("#editNote").textContent = ui.edit ? "Mode edit: klik bagian mana saja di preview untuk mengeditnya. " : "";
+    post({ type: "hf-edit", on: ui.edit });
+    saveDraft();
+  }
+  $("#editToggle").addEventListener("click", function () { setEdit(!ui.edit); });
+
+  // latar halaman contoh: gelap / putih (untuk mengecek header di website berlatar putih)
+  function setPage(p) {
+    ui.page = p === "light" ? "light" : "dark";
+    Array.prototype.forEach.call(document.querySelectorAll("#pageBg button"), function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-bg") === ui.page));
+    });
+    sendConfig(); saveDraft();
+  }
+  $("#pageBg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (b) setPage(b.getAttribute("data-bg")); });
+
+  /* ---------- ukuran layar ---------- */
+  function setDevice(d) {
+    ui.device = d;
+    $("#device").setAttribute("data-device", d);
+    Array.prototype.forEach.call(document.querySelectorAll("#devices button"), function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-device") === d));
+    });
+    saveDraft();
+  }
+  $("#devices").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (b) setDevice(b.getAttribute("data-device"));
+  });
+  if (window.ResizeObserver) new ResizeObserver(function () {
+    $("#widthLabel").textContent = Math.round($("#device").getBoundingClientRect().width) + " px";
+  }).observe($("#device"));
+
+  /* ---------- website target ---------- */
+  function setTarget(raw) {
+    raw = String(raw || "").trim();
+    var note = $("#targetNote");
+    if (!raw) {
+      ui.target = ""; $("#urlInput").value = "";
+      note.textContent = "Menampilkan halaman contoh. Scroll ke bawah di dalam preview untuk melihat footer.";
+    } else {
+      if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)) raw = (/^(localhost|127\.|192\.168\.|10\.)/i.test(raw) ? "http://" : "https://") + raw;
+      var u;
+      try { u = new URL(raw); if (!/^https?:$/.test(u.protocol)) throw 0; } catch (e) { toast("Alamat website tidak valid"); return; }
+      ui.target = u.href; $("#urlInput").value = u.href;
+      note.textContent = "Header di atas + website target + footer di bawah. Kalau area website kosong, situs itu melarang ditampilkan di iframe (batasan dari website tersebut).";
+      if (location.protocol === "https:" && u.protocol === "http:") toast("Halaman http tidak bisa dimuat dari demo https");
+    }
+    post({ type: "hf-target", url: ui.target });
+    saveDraft();
+  }
+  $("#urlForm").addEventListener("submit", function (e) { e.preventDefault(); setTarget($("#urlInput").value); });
+  $("#urlClear").addEventListener("click", function () { setTarget(""); });
+
+  /* =====================================================================
+     START
+     ===================================================================== */
+  renderTabs();
+  renderPanel();
+  updateChip();
+  setDevice(ui.device);
+  setEdit(ui.edit);
+  setPage(ui.page);
+  if (ui.target) { $("#urlInput").value = ui.target; setTarget(ui.target); }
+  frame.srcdoc = buildFrameDoc();
+})();
+</script>
+</body>
+</html>

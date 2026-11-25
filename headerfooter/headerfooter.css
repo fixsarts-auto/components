@@ -1,0 +1,630 @@
+/* =====================================================================
+   HEADER + FOOTER — headerfooter.css
+   (File ini berisi gaya HEADER dan FOOTER. Bagian HEADER ada di paling bawah.)
+   Footer yang BERDIRI SENDIRI: tidak butuh CSS tambahan dari website lain.
+   - Font Inter dimuat sendiri (baris @import di bawah).
+   - Background, warna teks, dan warna ikon sudah punya nilai bawaan.
+   - Semua variabel berawalan --ft- agar tidak bentrok dengan CSS website.
+   - Mobile-first: HP (default) -> Tablet (>=640px) -> Desktop (>=960px)
+
+   DAFTAR ISI
+     1. Font
+     2. Variabel (warna, font, ukuran)
+     3. Kerangka & reset
+     4. Grid kolom
+     5. Brand
+     6. Kolom link & ikon
+     7. Bar bawah & menu bahasa
+     8. Fokus keyboard
+     9. Responsive
+    10. Opsi tampil/sembunyi
+   ===================================================================== */
+
+/* ---------- 1. FONT ---------- */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* ---------- 2. VARIABEL ---------- */
+.site-footer{
+  /* warna (tema gelap = bawaan) */
+  --ft-bg:#0A0A0D;
+  --ft-text:#F4F4F6;
+  --ft-muted:#9B9BA5;
+  --ft-faint:#5E5E68;
+  --ft-border:#1D1D24;
+  --ft-accent:#6C7BFF;
+
+  /* font — ganti di sini kalau mau font lain */
+  --ft-font-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  --ft-font-display:var(--ft-font-body);
+
+  /* ukuran & jarak */
+  --ft-max:1240px;
+  --ft-pad-x:28px;
+  --ft-pad-top:70px;
+  --ft-pad-bottom:32px;
+  --ft-gap:40px;
+  --ft-margin-top:0px;
+  --ft-brand-weight:1.4fr;   /* lebar kolom brand relatif ke kolom link (desktop) */
+  --ft-cols:3;               /* jumlah kolom link (diisi otomatis oleh footer.js) */
+  --ft-logo-height:56px;     /* tinggi logo gambar */
+  --ft-icon-size:20px;       /* ukuran ikon di kolom link */
+  --ft-icon-opacity:.85;     /* kepekatan ikon (hover = 1) */
+  --ft-social-size:44px;     /* diameter tombol ikon sosial media */
+}
+
+/* tema terang: <footer data-footer-theme="light"> */
+.site-footer[data-footer-theme="light"]{
+  --ft-bg:#FFFFFF;
+  --ft-text:#16171B;
+  --ft-muted:#5C5F68;
+  --ft-faint:#8A8D96;
+  --ft-border:#E2E1E8;
+}
+
+/* warna ikon PNG (diatur otomatis oleh footer.js lewat atribut data-icon-tone)
+   white    = ikon jadi putih   (untuk latar gelap)
+   black    = ikon jadi hitam   (untuk latar terang)
+   original = warna asli file PNG */
+.site-footer[data-icon-tone="white"]{--ft-icon-filter:brightness(0) invert(1);}
+.site-footer[data-icon-tone="black"]{--ft-icon-filter:brightness(0);}
+.site-footer[data-icon-tone="original"]{--ft-icon-filter:none;}
+
+/* ---------- 3. KERANGKA & RESET ---------- */
+.site-footer,
+.site-footer *,
+.site-footer *::before,
+.site-footer *::after{box-sizing:border-box;}
+
+/* font dipaksa dari footer sendiri, bukan dari halaman induk */
+.site-footer,
+.site-footer *{
+  font-family:var(--ft-font-body);
+  letter-spacing:normal;
+  text-transform:none;
+}
+
+.site-footer{
+  display:block;
+  position:relative;
+  clear:both;
+  width:100%;
+  margin:var(--ft-margin-top) 0 0;
+  padding:var(--ft-pad-top) 0 var(--ft-pad-bottom);
+  background:var(--ft-bg);
+  background-image:radial-gradient(680px 300px at 14% 0%,rgba(108,123,255,.10),transparent 70%);   /* cadangan */
+  background-image:radial-gradient(680px 300px at 14% 0%,color-mix(in srgb,var(--ft-accent) 13%,transparent),transparent 70%);
+  color:var(--ft-text);
+  border-top:1px solid var(--ft-border);
+  font-size:16px;
+  font-weight:400;
+  line-height:1.5;
+  text-align:left;
+  -webkit-text-size-adjust:100%;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* garis aksen tipis di tepi atas footer */
+.site-footer::before{
+  content:"";
+  position:absolute;
+  top:-1px;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--ft-accent) 50%,transparent 100%);
+  opacity:.55;
+  pointer-events:none;
+}
+
+.site-footer .ft-wrap{
+  max-width:var(--ft-max);
+  margin:0 auto;
+  padding:0 var(--ft-pad-x);
+}
+
+/* ---------- 4. GRID KOLOM ---------- */
+/* HP (default): satu kolom, ditumpuk ke bawah */
+.ft-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:var(--ft-gap);
+}
+
+/* ---------- 5. BRAND ---------- */
+.ft-brand-link{
+  display:inline-block;
+  margin-bottom:14px;
+  color:var(--ft-text);
+  text-decoration:none;
+  font-family:var(--ft-font-display);
+  font-size:1.15rem;
+  font-weight:700;
+  letter-spacing:0.02em;
+}
+.ft-brand-link .ft-brand-accent{color:var(--ft-accent);}
+.ft-brand-link:has(.ft-brand-logo){line-height:0;}
+.ft-brand-logo{display:block;height:var(--ft-logo-height);width:auto;max-width:100%;object-fit:contain;}
+.ft-brand-text{
+  margin:0;
+  color:var(--ft-muted);
+  font-size:0.92rem;
+  line-height:1.7;
+  max-width:38ch;
+}
+
+/* ---------- 5b. IKON SOSIAL MEDIA (tanpa teks) ---------- */
+.ft-social{
+  list-style:none;
+  margin:26px 0 0;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.ft-social li{margin:0;padding:0;display:block;}
+.ft-social-link{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:var(--ft-social-size);
+  height:var(--ft-social-size);
+  color:var(--ft-muted);
+  border:1px solid var(--ft-border);
+  border-radius:50%;
+  background:transparent;
+  background:color-mix(in srgb,var(--ft-text) 4%,transparent);
+  text-decoration:none;
+  transition:color .2s ease,border-color .2s ease,background .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.ft-social-svg{display:block;width:46%;height:46%;}
+.ft-social-img{display:block;width:46%;height:46%;object-fit:contain;filter:var(--ft-icon-filter,none);opacity:var(--ft-icon-opacity);}
+a.ft-social-link:hover,
+a.ft-social-link:focus-visible{
+  color:var(--ft-text);
+  border-color:var(--ft-accent);
+  background:color-mix(in srgb,var(--ft-accent) 16%,transparent);
+  transform:translateY(-3px);
+  box-shadow:0 12px 26px -10px color-mix(in srgb,var(--ft-accent) 70%,transparent);
+}
+a.ft-social-link:hover .ft-social-img{opacity:1;}
+.ft-social-link.is-static{cursor:default;}                 /* link dimatikan: tetap tampil, tidak bisa diklik */
+
+.site-footer[data-social-shape="rounded"] .ft-social-link{border-radius:14px;}
+.site-footer[data-social-shape="plain"] .ft-social-link{border-color:transparent;background:transparent;border-radius:12px;}
+.site-footer[data-social-shape="plain"] a.ft-social-link:hover{background:color-mix(in srgb,var(--ft-text) 8%,transparent);box-shadow:none;}
+
+/* ---------- 6. KOLOM LINK & IKON ---------- */
+.ft-col-title{
+  margin:0 0 16px;
+  padding:0;
+  font-family:var(--ft-font-display);
+  font-size:0.72rem;
+  font-weight:700;
+  line-height:1.4;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ft-faint);
+}
+.ft-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.ft-list li{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:0;
+  padding:0;
+  font-size:0.9rem;
+  color:var(--ft-muted);
+  line-height:1.5;
+}
+.ft-list a{
+  color:var(--ft-muted);
+  text-decoration:none;
+  transition:color .18s ease,transform .18s ease;
+  display:inline-block;
+}
+.ft-list a:hover{transform:translateX(3px);}
+.ft-list a:hover,
+.ft-list a:focus-visible{color:var(--ft-text);}
+
+.ft-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  width:var(--ft-icon-size);
+  height:var(--ft-icon-size);
+  font-size:calc(var(--ft-icon-size) * .8);   /* untuk ikon berupa emoji */
+  line-height:1;
+}
+.ft-icon img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  filter:var(--ft-icon-filter,none);          /* putih / hitam otomatis */
+  opacity:var(--ft-icon-opacity);
+  transition:opacity .18s ease;
+}
+.ft-list li:hover .ft-icon img,
+.ft-list li:focus-within .ft-icon img{opacity:1;}
+
+/* ---------- 7. BAR BAWAH & MENU BAHASA ---------- */
+.ft-bottom{
+  margin-top:64px;
+  padding-top:24px;
+  border-top:1px solid var(--ft-border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  color:var(--ft-faint);
+  font-size:0.82rem;
+}
+.ft-bottom-end{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-left:auto;
+}
+
+/* Dropdown bahasa (buatan sendiri — warnanya selalu mengikuti tema footer) */
+.ft-lang{position:relative;display:inline-block;margin:0;}
+.ft-lang-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  min-width:150px;
+  margin:0;
+  padding:8px 12px;
+  background:transparent;
+  color:var(--ft-muted);
+  border:1px solid var(--ft-border);
+  border-radius:8px;
+  font-size:0.82rem;
+  font-weight:500;
+  line-height:1.2;
+  text-align:left;
+  cursor:pointer;
+  transition:color .18s ease,border-color .18s ease;
+}
+.ft-lang-btn:hover,
+.ft-lang-btn[aria-expanded="true"]{color:var(--ft-text);border-color:var(--ft-faint);}
+
+/* panah kecil */
+.ft-lang-caret{
+  flex-shrink:0;
+  width:6px;height:6px;
+  border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor;
+  transform:rotate(45deg) translate(-1px,-1px);
+  transition:transform .18s ease;
+}
+.ft-lang-btn[aria-expanded="true"] .ft-lang-caret{transform:rotate(225deg) translate(-1px,-1px);}
+
+/* daftar pilihan: membuka ke ATAS (footer ada di dasar halaman) */
+.ft-lang-list{
+  position:absolute;
+  right:0;
+  bottom:calc(100% + 8px);
+  z-index:50;
+  min-width:100%;
+  width:max-content;
+  max-width:min(280px,calc(100vw - 2 * var(--ft-pad-x)));
+  max-height:min(400px,70vh);   /* cukup tinggi agar 9 bahasa muat tanpa scrollbar */
+  overflow-x:hidden;            /* tidak ada scrollbar kiri-kanan */
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  margin:0;
+  padding:6px;
+  list-style:none;
+  background:var(--ft-bg);                                                  /* cadangan */
+  background:color-mix(in srgb,var(--ft-text) 7%,var(--ft-bg));
+  color:var(--ft-text);
+  border:1px solid var(--ft-border);
+  border-radius:10px;
+  box-shadow:0 14px 34px rgba(0,0,0,.4);
+}
+.ft-lang[data-dir="down"] .ft-lang-list{bottom:auto;top:calc(100% + 8px);}
+/* scrollbar bawaan browser ikut tema (tidak putih di footer gelap) */
+.site-footer[data-footer-theme="dark"] .ft-lang-list{color-scheme:dark;}
+.site-footer[data-footer-theme="light"] .ft-lang-list{color-scheme:light;}
+/* Chrome / Edge / Safari: scrollbar tipis tanpa panah */
+.ft-lang-list::-webkit-scrollbar{width:8px;height:0;background:transparent;}
+.ft-lang-list::-webkit-scrollbar-track{background:transparent;}
+.ft-lang-list::-webkit-scrollbar-thumb{background:var(--ft-faint);border-radius:8px;}
+.ft-lang-list::-webkit-scrollbar-button{display:none;width:0;height:0;}
+.ft-lang-list::-webkit-scrollbar-corner{background:transparent;}
+/* Firefox (tidak mengenal ::-webkit-scrollbar) */
+@supports not selector(::-webkit-scrollbar){
+  .ft-lang-list{scrollbar-width:thin;scrollbar-color:var(--ft-faint) transparent;}
+}
+.ft-lang-list[hidden]{display:none;}
+.site-footer[data-footer-theme="light"] .ft-lang-list{box-shadow:0 14px 34px rgba(20,20,30,.16);}
+
+.ft-lang-opt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin:0;
+  padding:9px 10px;
+  border-radius:6px;
+  color:var(--ft-muted);
+  font-size:0.85rem;
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  cursor:pointer;
+}
+.ft-lang-opt:hover,
+.ft-lang-opt:focus{
+  background:color-mix(in srgb,var(--ft-text) 10%,transparent);
+  color:var(--ft-text);
+  outline:none;
+}
+.ft-lang-opt:focus-visible{box-shadow:inset 0 0 0 2px var(--ft-accent);}
+.ft-lang-opt[aria-selected="true"]{color:var(--ft-text);font-weight:600;}
+.ft-lang-opt[aria-selected="true"]::after{          /* tanda centang untuk bahasa aktif */
+  content:"";
+  flex-shrink:0;
+  width:5px;height:9px;
+  border-right:2px solid var(--ft-accent);
+  border-bottom:2px solid var(--ft-accent);
+  transform:rotate(45deg) translate(-1px,-1px);
+}
+
+/* teks untuk pembaca layar saja */
+.ft-sr-only{
+  position:absolute;
+  width:1px;height:1px;
+  margin:-1px;padding:0;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+
+/* ---------- 8. FOKUS KEYBOARD (aksesibilitas) ---------- */
+.site-footer a:focus-visible,
+.site-footer .ft-lang-btn:focus-visible{
+  outline:2px solid var(--ft-accent);
+  outline-offset:3px;
+  border-radius:4px;
+}
+.site-footer .ft-lang-btn:focus-visible{border-radius:8px;}
+
+/* =====================================================================
+   9. RESPONSIVE
+   ===================================================================== */
+
+/* ---------- TABLET (>= 640px) ----------
+   Brand memanjang penuh di atas, kolom link dibagi 2 / 3 di bawahnya. */
+@media (min-width:640px){
+  .ft-grid{grid-template-columns:repeat(2,1fr);}
+  .ft-brand{grid-column:1 / -1;}
+}
+
+/* ---------- DESKTOP / WEB (>= 960px) ----------
+   Satu baris: brand (lebih lebar) + N kolom link. */
+@media (min-width:960px){
+  .ft-grid{grid-template-columns:var(--ft-brand-weight) repeat(var(--ft-cols),1fr);}
+  .ft-brand{grid-column:auto;}
+  .ft-bottom{flex-wrap:nowrap;}
+  /* kalau brand disembunyikan, kolom link saja yang dibagi rata */
+  .site-footer[data-hide-brand="true"] .ft-grid{grid-template-columns:repeat(var(--ft-cols),1fr);}
+}
+
+/* ---------- HP (< 640px) ---------- */
+@media (max-width:639px){
+  .site-footer{--ft-pad-top:52px;--ft-pad-x:22px;--ft-gap:32px;}
+  .ft-bottom{margin-top:44px;flex-direction:column;align-items:flex-start;}
+  .ft-bottom-end{margin-left:0;}
+  .ft-lang-list{right:auto;left:0;}
+
+  /* opsi: 2 kolom link di HP  ->  <footer data-mobile-columns="2"> */
+  .site-footer[data-mobile-columns="2"] .ft-grid{grid-template-columns:repeat(2,1fr);gap:32px 20px;}
+  .site-footer[data-mobile-columns="2"] .ft-brand{grid-column:1 / -1;}
+
+  /* opsi: rata tengah di HP  ->  <footer data-mobile-align="center"> */
+  .site-footer[data-mobile-align="center"]{text-align:center;}
+  .site-footer[data-mobile-align="center"] .ft-brand-text{margin-left:auto;margin-right:auto;}
+  .site-footer[data-mobile-align="center"] .ft-brand-logo{margin-left:auto;margin-right:auto;}
+  .site-footer[data-mobile-align="center"] .ft-list li{justify-content:center;}
+  .site-footer[data-mobile-align="center"] .ft-bottom{align-items:center;text-align:center;}
+  .site-footer[data-mobile-align="center"] .ft-bottom-end{justify-content:center;}
+  .site-footer[data-mobile-align="center"] .ft-social{justify-content:center;}
+  .site-footer[data-mobile-align="center"] .ft-lang-list{left:50%;transform:translateX(-50%);}
+}
+
+/* ---------- 10. OPSI TAMPIL / SEMBUNYI ---------- */
+.site-footer[data-hide-brand="true"] .ft-brand{display:none;}
+.site-footer[data-hide-bottom="true"] .ft-bottom{display:none;}
+
+
+/* =====================================================================
+   BAGIAN HEADER
+   Header BERDIRI SENDIRI: semua reset yang dibutuhkan sudah ada di sini,
+   dan semua class berawalan "hf-" supaya tidak bentrok dengan CSS website
+   lain (mis. Bootstrap yang juga punya .navbar). Semua rule diawali .hf-nav.
+
+   Header SELALU gelap dan TIDAK mewarisi warna dari website (aman dipasang di situs
+   berlatar putih). Mau mengubah warna? Pakai variabel --hf-* (mis. --hf-accent) atau
+   opsi "style" di headerfooter-config.js.
+   Latar header: "auto" = solid hitam di halaman terang, kaca/blur di halaman gelap.
+   Isi/teks/ikon header diatur lewat demo.html -> headerfooter-config.js
+
+   Class status (diatur otomatis oleh headerfooter.js):
+     .hf-compact  layar < 960px: menu bar jadi laci
+     .hf-ham      tombol kanan = hamburger menu (bukan keranjang); menu bar tetap tampil di desktop
+   ===================================================================== */
+
+.hf-nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--hf-nav-glass,rgba(10,10,13,0.78));          /* mode kaca: transparan + blur */
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--hf-border-soft,#1D1D24);
+  color:var(--hf-text,#F4F4F6);
+  font-family:var(--hf-font-body,'Inter',system-ui,-apple-system,'Segoe UI',sans-serif);
+  font-size:16px;line-height:1.5;text-align:left;
+}
+/* mode solid (otomatis dipakai di halaman terang): hitam pekat, tanpa blur */
+.hf-nav[data-hf-style="solid"]{
+  background:var(--hf-nav-solid,#0A0A0D);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+.hf-nav *,.hf-nav *::before,.hf-nav *::after{box-sizing:border-box;}
+.hf-nav a{color:inherit;text-decoration:none;}
+.hf-nav ul{list-style:none;margin:0;padding:0;}
+.hf-nav button,.hf-nav input{font-family:inherit;margin:0;}
+.hf-nav button{cursor:pointer;}
+.hf-nav a[aria-disabled="true"]{cursor:default;}
+.hf-nav a:focus-visible,.hf-nav button:focus-visible{outline:2px solid var(--hf-accent,#6C7BFF);outline-offset:3px;border-radius:6px;}
+
+.hf-nav .hf-nav-wrap{
+  position:relative;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  max-width:var(--hf-max,1240px);margin:0 auto;padding:20px 28px;
+}
+
+/* ---------- logo ---------- */
+.hf-nav .hf-brand{
+  display:inline-flex;align-items:center;flex-shrink:0;
+  font-family:var(--hf-font-display,'Plus Jakarta Sans',system-ui,sans-serif);
+  font-size:1.15rem;font-weight:700;letter-spacing:0.02em;color:var(--hf-text,#F4F4F6);
+}
+.hf-nav .hf-brand span{color:var(--hf-accent,#6C7BFF);}
+.hf-nav .hf-brand-logo{height:var(--hf-logo-h,32px);width:auto;max-width:200px;object-fit:contain;display:block;}
+
+/* ---------- ikon (gambar PNG dari assets/icon/ atau emoji cadangan) ---------- */
+.hf-nav .hf-icon{width:var(--hf-icon-size,20px);height:var(--hf-icon-size,20px);object-fit:contain;display:block;}
+.hf-nav .hf-icon-emoji{font-size:calc(var(--hf-icon-size,20px) * 0.95);line-height:1;display:block;}
+
+/* ---------- menu utama ---------- */
+.hf-nav .hf-nav-menu{display:flex;align-items:center;gap:36px;}
+.hf-nav .hf-nav-menu a,.hf-nav .hf-ham-menu a{font-size:0.92rem;color:var(--hf-muted,#9B9BA5);transition:color .18s var(--hf-ease,cubic-bezier(.22,.61,.36,1));}
+.hf-nav .hf-nav-menu a:hover,.hf-nav .hf-nav-menu a.active,.hf-nav .hf-ham-menu a:hover,.hf-nav .hf-ham-menu a.active{color:var(--hf-text,#F4F4F6);}
+.hf-nav .hf-nav-actions{display:flex;align-items:center;gap:18px;flex-shrink:0;}
+
+/* ---------- dropdown (submenu) ---------- */
+.hf-nav .hf-nav-item{display:flex;align-items:center;gap:4px;}
+.hf-nav .hf-dd-toggle{
+  width:20px;height:20px;padding:0;border:0;background:none;border-radius:6px;
+  display:grid;place-items:center;color:var(--hf-muted,#9B9BA5);
+  transition:color .18s ease;
+}
+.hf-nav .hf-dd-toggle::before{
+  content:"";width:6px;height:6px;
+  border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  transform:rotate(45deg) translate(-1px,-1px);transition:transform .18s ease;
+}
+.hf-nav .hf-has-dd.open>.hf-nav-item .hf-dd-toggle::before{transform:rotate(225deg) translate(-1px,-1px);}
+.hf-nav .hf-has-dd:hover>.hf-nav-item .hf-dd-toggle,
+.hf-nav .hf-has-dd.open>.hf-nav-item .hf-dd-toggle{color:var(--hf-text,#F4F4F6);}
+.hf-nav .hf-nav-item{display:flex;align-items:center;gap:4px;}
+.hf-nav .hf-dd a{display:block;padding:10px 12px;border-radius:8px;font-size:0.9rem;white-space:nowrap;}
+
+/* Desktop: dropdown melayang di bawah menu (muncul saat hover / fokus / klik panah) */
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-has-dd{position:relative;}
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-dd{
+  position:absolute;top:100%;left:-14px;min-width:230px;margin-top:14px;padding:8px;
+  background:var(--hf-elevated,#111116);border:1px solid var(--hf-border,#26262E);border-radius:12px;
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+  opacity:0;visibility:hidden;transform:translateY(-6px);
+  transition:opacity .16s ease,transform .16s ease,visibility .16s;
+}
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-dd::before{content:"";position:absolute;left:0;right:0;top:-16px;height:16px;}   /* jembatan hover */
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-has-dd:hover>.hf-dd,
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-has-dd:has(:focus-visible)>.hf-dd,
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-has-dd.open>.hf-dd{opacity:1;visibility:visible;transform:none;}
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-has-dd:hover>.hf-nav-item .hf-dd-toggle::before,
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-has-dd:has(:focus-visible)>.hf-nav-item .hf-dd-toggle::before{transform:rotate(225deg) translate(-1px,-1px);}
+.hf-nav:not(.hf-compact) .hf-nav-menu .hf-dd a:hover,.hf-nav:not(.hf-compact) .hf-nav-menu .hf-dd a.active{background:rgba(255,255,255,.06);}
+
+/* ---------- search ---------- */
+.hf-nav .hf-nav-search{
+  display:flex;align-items:center;gap:8px;margin:0;
+  background:var(--hf-elevated,#111116);border:1px solid var(--hf-border,#26262E);border-radius:999px;
+  padding:8px 14px;transition:border-color .18s ease;
+}
+.hf-nav .hf-nav-search:focus-within{border-color:var(--hf-accent,#6C7BFF);}
+.hf-nav .hf-nav-search-icon{background:none;border:none;color:var(--hf-muted,#9B9BA5);display:flex;align-items:center;padding:0;}
+.hf-nav .hf-nav-search input{
+  background:none;border:none;color:var(--hf-text,#F4F4F6);font-size:0.85rem;width:150px;outline:none;padding:0;box-shadow:none;
+}
+.hf-nav .hf-nav-search input::placeholder{color:var(--hf-faint,#5E5E68);}
+
+/* ---------- keranjang ---------- */
+.hf-nav .hf-icon-btn{
+  position:relative;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--hf-border,#26262E);background:var(--hf-elevated,#111116);
+  display:flex;align-items:center;justify-content:center;color:var(--hf-text,#F4F4F6);
+  transition:border-color .18s ease, transform .18s ease;
+}
+.hf-nav .hf-icon-btn:hover{border-color:var(--hf-accent,#6C7BFF);transform:translateY(-1px);}
+.hf-nav .hf-cart-count{
+  position:absolute;top:-6px;right:-6px;
+  background:var(--hf-accent-grad,linear-gradient(120deg,#4E7CFF,#8B5CF6));color:#fff;
+  font-size:0.68rem;font-weight:700;line-height:1;
+  min-width:18px;height:18px;border-radius:999px;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;
+}
+
+/* ---------- tombol hamburger ---------- */
+.hf-nav .hf-nav-toggle{display:none;background:none;border:1px solid var(--hf-border,#26262E);border-radius:8px;width:42px;height:42px;padding:0;align-items:center;justify-content:center;}
+.hf-nav .hf-nav-toggle span,.hf-nav .hf-nav-toggle span::before,.hf-nav .hf-nav-toggle span::after{
+  content:'';display:block;width:18px;height:1.5px;background:var(--hf-text,#F4F4F6);position:relative;transition:transform .2s ease,opacity .2s ease;
+}
+.hf-nav .hf-nav-toggle span::before{position:absolute;top:-6px;}
+.hf-nav .hf-nav-toggle span::after{position:absolute;top:6px;}
+.hf-nav .hf-nav-toggle.open span{background:transparent;}
+.hf-nav .hf-nav-toggle.open span::before{transform:translateY(6px) rotate(45deg);}
+.hf-nav .hf-nav-toggle.open span::after{transform:translateY(-6px) rotate(-45deg);}
+.hf-nav.hf-compact .hf-nav-toggle,.hf-nav.hf-ham .hf-nav-toggle{display:flex;}
+
+/* ---------- layar kecil (< 960px): menu jadi laci ---------- */
+.hf-nav.hf-compact .hf-nav-menu{
+  position:absolute;top:100%;left:0;right:0;z-index:5;
+  flex-direction:column;align-items:stretch;gap:0;
+  background:var(--hf-elevated,#111116);border-bottom:1px solid var(--hf-border,#26262E);
+  padding:6px 28px 20px;display:none;max-height:calc(100vh - 90px);overflow-y:auto;
+}
+.hf-nav.hf-compact .hf-nav-menu.open{display:flex;}
+
+/* ---------- panel hamburger (mode hamburger, layar lebar): menu bar tetap tampil ---------- */
+.hf-nav .hf-ham-menu{
+  position:absolute;top:calc(100% + 8px);right:28px;z-index:5;width:320px;
+  flex-direction:column;align-items:stretch;display:none;
+  background:var(--hf-elevated,#111116);border:1px solid var(--hf-border,#26262E);border-radius:14px;
+  padding:6px 18px 10px;box-shadow:0 18px 40px rgba(0,0,0,.45);
+  max-height:calc(100vh - 110px);overflow-y:auto;
+}
+.hf-nav .hf-ham-menu.open{display:flex;}
+.hf-nav.hf-compact .hf-ham-menu,.hf-nav.hf-compact .hf-ham-menu.open{display:none;}   /* di HP yang dipakai laci */
+
+/* isi laci & panel: daftar vertikal + submenu accordion */
+.hf-nav.hf-compact .hf-nav-menu>li,.hf-nav .hf-ham-menu>li{width:100%;padding:14px 0;border-bottom:1px solid var(--hf-border-soft,#1D1D24);}
+.hf-nav.hf-compact .hf-nav-menu>li:last-child,.hf-nav .hf-ham-menu>li:last-child{border-bottom:none;}
+.hf-nav.hf-compact .hf-nav-item,.hf-nav .hf-ham-menu .hf-nav-item{justify-content:space-between;}
+.hf-nav.hf-compact .hf-dd-toggle,.hf-nav .hf-ham-menu .hf-dd-toggle{width:34px;height:34px;}
+.hf-nav.hf-compact .hf-dd,.hf-nav .hf-ham-menu .hf-dd{display:none;padding:6px 0 0 14px;}
+.hf-nav.hf-compact .hf-has-dd.open>.hf-dd,.hf-nav .hf-ham-menu .hf-has-dd.open>.hf-dd{display:block;}
+.hf-nav.hf-compact .hf-dd a,.hf-nav .hf-ham-menu .hf-dd a{padding:10px 8px;}
+
+/* search mengecil jadi ikon di layar kecil */
+@media (max-width:959px){
+  .hf-nav .hf-nav-search{padding:9px;border-radius:50%;}
+  .hf-nav .hf-nav-search input{display:none;}
+}
+@media (max-width:400px){
+  .hf-nav .hf-nav-actions{gap:10px;}
+}
