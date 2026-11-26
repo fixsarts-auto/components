@@ -40,7 +40,13 @@ window.HeaderConfig = {
     {
       label: "Tools",
       href: "#",
-      dropdown: { show: true, items: [{ label: "Fixs Flow", href: "#" }, { label: "Fixs QR", href: "#" }] }
+      dropdown: {
+        show: true,
+        items: [
+          { label: "Fixs Flow", href: "https://flow.fixs-arts.workers.dev/" },
+          { label: "Fixs QR", href: "https://qr.fixs-arts.workers.dev/" }
+        ]
+      }
     },
     { label: "Tentang", href: "https://fikrispt.github.io/", external: true }
   ],
