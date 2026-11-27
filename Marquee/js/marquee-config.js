@@ -1,15 +1,15 @@
 window.FIXS_MARQUEE = {
   "mode": "marquee",
   "dir": "left",
-  "speed": 81,
-  "gap": 50,
+  "speed": 50,
+  "gap": 150,
   "h": 34,
   "pad": 35,
   "radius": 0,
   "pause": true,
   "fade": true,
   "bgMode": "custom",
-  "bgColor": "#030303",
+  "bgColor": "#0f0f0f",
   "colorMode": "orig",
   "logoColor": "#ffffff",
   "items": [
@@ -77,29 +77,7 @@ window.FIXS_MARQUEE = {
       "hidden": false,
       "color": "",
       "useColor": false,
-      "scale": 100
-    },
-    {
-      "id": "2footeo",
-      "src": "",
-      "text": "Fixs Flow",
-      "link": "",
-      "useLink": false,
-      "hidden": false,
-      "color": "",
-      "useColor": true,
-      "scale": 125
-    },
-    {
-      "id": "5j7xbfr",
-      "src": "",
-      "text": "Fixs QR",
-      "link": "",
-      "useLink": false,
-      "hidden": false,
-      "color": "",
-      "useColor": true,
-      "scale": 125
+      "scale": 110
     },
     {
       "id": "1ewxnzv",
@@ -107,7 +85,7 @@ window.FIXS_MARQUEE = {
       "text": "Ryceverse",
       "link": "",
       "useLink": false,
-      "hidden": false,
+      "hidden": true,
       "color": "",
       "useColor": false,
       "scale": 90
