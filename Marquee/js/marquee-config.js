@@ -9,9 +9,9 @@ window.FIXS_MARQUEE = {
   "pause": true,
   "fade": true,
   "bgMode": "custom",
-  "bgColor": "#0f0f0f",
+  "bgColor": "#fafafa",
   "colorMode": "orig",
-  "logoColor": "#ffffff",
+  "logoColor": "#050505",
   "items": [
     {
       "id": "hn6la6a",
@@ -21,7 +21,7 @@ window.FIXS_MARQUEE = {
       "useLink": false,
       "hidden": false,
       "color": "",
-      "useColor": true,
+      "useColor": false,
       "scale": 70
     },
     {
@@ -43,7 +43,7 @@ window.FIXS_MARQUEE = {
       "useLink": false,
       "hidden": false,
       "color": "",
-      "useColor": true,
+      "useColor": false,
       "scale": 60
     },
     {
@@ -54,7 +54,7 @@ window.FIXS_MARQUEE = {
       "useLink": false,
       "hidden": false,
       "color": "",
-      "useColor": true,
+      "useColor": false,
       "scale": 60
     },
     {
@@ -65,7 +65,7 @@ window.FIXS_MARQUEE = {
       "useLink": false,
       "hidden": false,
       "color": "",
-      "useColor": true,
+      "useColor": false,
       "scale": 60
     },
     {
@@ -74,9 +74,9 @@ window.FIXS_MARQUEE = {
       "text": "Fixs Arts (White)",
       "link": "",
       "useLink": false,
-      "hidden": false,
-      "color": "",
-      "useColor": false,
+      "hidden": true,
+      "color": "#121212",
+      "useColor": true,
       "scale": 110
     },
     {
