@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marquee Logo — Demo & Pengaturan</title>
+<style>
+:root{--bg:#f4f5fa;--c:#fff;--t:#16162a;--m:#6b6d85;--b:#e2e4ef;--a:linear-gradient(135deg,#6366f1,#8b5cf6)}
+[data-theme=dark]{--bg:#0b0b12;--c:#15151f;--t:#eef0ff;--m:#9193ab;--b:#262638}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.w{max-width:1180px;margin:0 auto;padding:24px 20px 60px}
+header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+header h1{font-size:20px;margin:0;flex:1}
+.card{background:var(--c);border:1px solid var(--b);border-radius:16px;padding:18px;margin-bottom:18px}
+.card h2{font-size:13px;margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em;color:var(--m)}
+button,.btn{font:inherit;border:1px solid var(--b);background:var(--c);color:var(--t);border-radius:999px;padding:8px 16px;cursor:pointer}
+button:hover{border-color:#8b5cf6}
+.pri{background:var(--a);color:#fff;border:0;font-weight:600}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.g{grid-template-columns:1fr}}
+.set{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.set label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--m)}
+.set .ck{flex-direction:row;align-items:center;gap:8px;color:var(--t);font-size:14px}
+input[type=text],input:not([type]),select{font:inherit;color:var(--t);background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:7px 10px;width:100%;min-width:0}
+input[type=color]{width:38px;height:34px;padding:2px;border:1px solid var(--b);border-radius:8px;background:var(--bg);cursor:pointer}
+#list{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow:auto;margin-top:12px}
+.row{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--b);border-radius:12px;background:var(--bg)}
+.row.sel{border-color:#8b5cf6;box-shadow:0 0 0 2px rgba(139,92,246,.25)}
+.row.off{opacity:.5}
+.row.over{border-style:dashed}
+.hd{cursor:grab;color:var(--m);user-select:none;padding:0 2px}
+.th{width:44px;height:36px;border-radius:8px;background:var(--c);display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden;font-weight:700;color:var(--m)}
+.th img{max-width:100%;max-height:100%}
+.f{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.lk{display:flex;gap:6px;align-items:center}
+.sw{position:relative;width:34px;height:20px;flex:none}
+.sw input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer;z-index:1}
+.sw i{position:absolute;inset:0;background:var(--b);border-radius:20px;transition:.2s}
+.sw i:after{content:"";position:absolute;width:16px;height:16px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+i{background:#8b5cf6}
+.sw input:checked+i:after{left:16px}
+.b{padding:4px 9px;border-radius:8px}
+.hint{color:var(--m);font-size:12px;margin:8px 0 0}
+textarea{width:100%;height:150px;font:12px/1.4 ui-monospace,Consolas,monospace;background:var(--bg);color:var(--t);border:1px solid var(--b);border-radius:12px;padding:10px;resize:vertical}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+input[type=color]:disabled{opacity:.3;cursor:not-allowed}
+.sv{cursor:text;min-width:40px}.sc,.sv{font-size:12px;color:var(--m);white-space:nowrap}.sz{flex:1;min-width:0}
+</style>
+</head>
+<body>
+<div class="w">
+<header>
+  <h1>Marquee Logo — Pengaturan</h1>
+  <button id="th">Tema: —</button>
+  <button id="imp">Impor config.json</button>
+  <button id="rs">Reset</button>
+  <input type="file" id="impf" accept=".json" hidden>
+</header>
+
+<div class="card">
+  <h2>Preview <label style="float:right;text-transform:none;letter-spacing:0;font-weight:400"><input type="checkbox" id="ed" checked> Mode edit (klik logo untuk memilih)</label></h2>
+  <div id="prev"></div>
+  <p class="hint">Ganti tema di tombol atas untuk melihat background &amp; warna logo menyesuaikan. Matikan mode edit untuk mencoba link seperti di website asli.</p>
+</div>
+
+<div class="g">
+  <div class="card">
+    <h2>Logo</h2>
+    <div class="acts" style="margin:0">
+      <button class="pri" id="up">+ Upload logo</button>
+      <button id="addt">+ Teks saja</button>
+      <input type="file" id="upf" accept="image/*,.svg,.ico,.avif,.webp,.jfif" multiple hidden>
+    </div>
+    <div id="list"></div>
+    <p class="hint">Seret ⋮⋮ untuk mengubah urutan · 👁 = tampil/sembunyikan · saklar = link on/off · slider Ukuran = skala logo itu (jarak ke logo lain menyesuaikan) · saklar kedua = aktifkan warna khusus logo itu (default: warna asli).</p>
+  </div>
+  <div class="card">
+    <h2>Pengaturan</h2>
+    <div class="set" id="set"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Pasang di website</h2>
+  <p style="margin:0 0 10px">Taruh folder hasil unduhan di website, lalu tempel kode pendek ini di posisi section. <b>Alamat src</b> = lokasi <code>marquee.js</code> relatif dari halaman tujuan (pakai <code>/</code>, bukan <code>\</code>):<br><input id="pth" style="margin:8px 0" placeholder="components/Marquee/marquee.js"></p>
+  <textarea id="out" readonly></textarea>
+  <div class="acts">
+    <button class="pri" id="cp">Salin script</button>
+    <button id="cp2">Salin versi 1 file (panjang, tanpa folder)</button>
+    <button id="zp">Unduh .zip terbaru</button>
+  </div>
+</div>
+</div>
+
+<script src="js/marquee-logo.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+/* ===== RUNTIME (dipakai preview & diekspor apa adanya) ===== */
+if(!window.FixsMarquee)document.body.insertAdjacentHTML('afterbegin','<p style="padding:20px;color:#e11">js/marquee-logo.js tidak ditemukan. Taruh demo.html satu folder dengan folder js/.</p>');
+const RT=FixsMarquee.rt,FM=FixsMarquee.render;
+const INDEX="<!DOCTYPE html>\n<html lang=\"id\" data-theme=\"dark\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Marquee Logo<\/title>\n<style>\nbody{margin:0;font-family:system-ui,sans-serif;background:#0b0b12;color:#fff}\n[data-theme=light] body{background:#fff;color:#16162a}\nsection{max-width:1100px;margin:60px auto;padding:0 20px}\nbutton{font:inherit;padding:8px 16px;border-radius:999px;border:1px solid #8b5cf6;background:none;color:inherit;cursor:pointer}\n<\/style>\n<\/head>\n<body>\n<section>\n  <button onclick=\"var d=document.documentElement;d.dataset.theme=d.dataset.theme=='dark'?'light':'dark'\">Ganti tema<\/button>\n  <h2>Dipercaya oleh<\/h2>\n  <!-- Section marquee logo: pindahkan div ini ke posisi mana pun -->\n  <div id=\"fixs-marquee\"><\/div>\n  <script src=\"marquee.js\"><\/script>\n<\/section>\n<\/body>\n<\/html>\n",README="MARQUEE LOGO - Fixs Arts\n\nIsi folder (simpan satu folder, misal components/Marquee/):\n  marquee.js            <- SATU-SATUNYA file yang dipanggil di halaman\n  demo.html             pengaturan (buka di browser)\n  index.html            contoh halaman\n  config.json           untuk \"Impor config.json\" di demo.html\n  css/  js/  assets/    dimuat otomatis oleh marquee.js (jangan dipindah)\n\nPasang di halaman mana pun (cukup ini):\n  <section>\n    <div id=\"fixs-marquee\"><\/div>\n    <script src=\"components/Marquee/marquee.js\"><\/script>\n  <\/section>\n\nAlamat src = lokasi marquee.js RELATIF terhadap halaman tersebut (pakai garis miring /, bukan \\, hindari spasi di nama folder).\nCara ini sama untuk lokal (file://), GitHub Pages, maupun Cloudflare Pages.\n\nUbah pengaturan: buka demo.html, Impor config.json, atur, lalu Unduh .zip terbaru dan timpa isi foldernya.\nTema: mode \"Ikuti tema web\" membaca data-theme / data-bs-theme / class dark pada <html> atau <body>.\n",LOADER="/* Fixs Arts - Marquee Logo (loader)\n   Pasang cukup: <div id=\"fixs-marquee\"><\/div> + <script src=\"PATH/marquee.js\"><\/script>\n   File ini otomatis memuat css/ dan js/ yang ada di sebelahnya. */\n(function(){\n  var s=document.currentScript,b=s.src.replace(/[^\\/]*$/,'');\n  function css(h){var l=document.createElement('link');l.rel='stylesheet';l.href=h;document.head.appendChild(l)}\n  function js(h,cb){var e=document.createElement('script');e.src=h;e.onload=cb;document.head.appendChild(e)}\n  css(b+'css/marquee-logo.css');\n  js(b+'js/marquee-config.js',function(){js(b+'js/marquee-logo.js')});\n})();\n",AUTO="(function(){var C=window.FIXS_MARQUEE;if(!C)return;function go(){var t=document.getElementById('fixs-marquee');if(t)window.FixsMarquee.render(t,C,{})}document.readyState=='loading'?document.addEventListener('DOMContentLoaded',go):go()})();\n";
+
+
+/* ===== EDITOR ===== */
+const $=s=>document.querySelector(s),uid=()=>Math.random().toString(36).slice(2,9);
+const MODES=[['marquee','Marquee (jalan terus)'],['wave','Marquee + gelombang'],['bounce','Bolak-balik (ping-pong)'],['float','Melayang'],['fade','Berkedip halus'],['zoom','Zoom pulse'],['flip','Putar 3D']];
+const DEF={mode:'marquee',dir:'left',speed:60,gap:64,h:40,pad:28,radius:20,pause:true,fade:true,bgMode:'auto',bgColor:'#14141f',colorMode:'orig',logoColor:'#ffffff',
+items:['Brand One','Studio Nova','Kopi Senja','Urban Lab','Pixel Craft','Warung Digital'].map(t=>({id:uid(),src:'',text:t,link:'',useLink:false,hidden:false,color:'',useColor:false}))};
+const SET=[['mode','Animasi','select',MODES],['dir','Arah marquee','select',[['left','← Ke kiri'],['right','Ke kanan →']]],['speed','Kecepatan (px/detik)','range',[10,300]],['gap','Jarak antar logo','range',[16,160]],['h','Tinggi logo','range',[16,120]],['pad','Padding atas/bawah','range',[0,100]],['radius','Radius sudut','range',[0,60]],
+['fade','Pudar di tepi','check'],['bgMode','Background','select',[['auto','Ikuti tema web'],['custom','Warna sendiri']]],['bgColor','Warna background','color'],['colorMode','Warna logo','select',[['orig','Warna asli'],['auto','Ikuti tema web'],['custom','Satu warna dasar']]],['logoColor','Warna dasar (mode Satu warna)','color']];
+let C,sel=null,tmr;
+try{C=JSON.parse(localStorage.getItem('fxm-cfg'))}catch(e){}
+C=C&&C.items?Object.assign({},DEF,C):JSON.parse(JSON.stringify(DEF));
+const save=()=>{try{localStorage.setItem('fxm-cfg',JSON.stringify(C))}catch(e){}};
+let draw;
+function render(){const ed=$('#ed').checked;draw=FM($('#prev'),C,{editor:ed,sel:ed?sel:null,onSelect:id=>{sel=id;mark(true);render()}});clearTimeout(tmr);tmr=setTimeout(exp,400);save()}
+function mark(scroll){document.querySelectorAll('.row').forEach(r=>{const s=r.dataset.id==sel;r.classList.toggle('sel',s);if(s&&scroll)r.scrollIntoView({block:'nearest',behavior:'smooth'})})}
+
+function setup(){const b=$('#set');SET.forEach(([k,l,t,o])=>{const L=document.createElement('label');let h;
+if(t=='check'){L.className='ck';L.innerHTML='<input type=checkbox> '+l;h=L.firstChild;h.checked=!!C[k];h.onchange=()=>{C[k]=h.checked;render()}}
+else{L.textContent=l;if(t=='select'){h=document.createElement('select');o.forEach(([v,n])=>h.add(new Option(n,v)))}else{h=document.createElement('input');h.type=t;if(t=='range'){h.min=o[0];h.max=o[1]}}
+h.value=C[k];h.oninput=()=>{C[k]=t=='range'?+h.value:h.value;render()};L.appendChild(h);if(t=='range'){const s=document.createElement('span');s.textContent=C[k];h.addEventListener('input',()=>s.textContent=h.value);L.appendChild(s)}}
+b.appendChild(L)})}
+
+function list(){const L=$('#list');L.innerHTML='';C.items.forEach(it=>{const r=document.createElement('div');r.className='row'+(it.id==sel?' sel':'')+(it.hidden?' off':'');r.draggable=false;r.dataset.id=it.id;
+r.innerHTML='<span class=hd>⋮⋮</span><div class=th></div><div class=f><input class=tx placeholder="Teks / nama logo"><div class=lk><label class=sw title="Link on/off"><input type=checkbox class=ul><i></i></label><input class=ln placeholder="https://link-tujuan.com"></div><div class=lk><span class=sc>Ukuran</span><input type=range class=sz min=30 max=200 step=5><span class=sv></span></div></div><label class=sw title="Aktifkan warna khusus logo ini"><input type=checkbox class=uc><i></i></label><input type=color class=cl title="Warna khusus logo ini"><button class=b data-a=h title="Tampil / sembunyikan">👁</button><button class=b data-a=d title="Hapus">🗑</button>';
+const th=r.querySelector('.th');if(it.src){const im=new Image();im.src=it.src;th.appendChild(im)}else th.textContent='Aa';
+const tx=r.querySelector('.tx'),ul=r.querySelector('.ul'),ln=r.querySelector('.ln'),uc=r.querySelector('.uc'),sz=r.querySelector('.sz'),sv=r.querySelector('.sv'),cl=r.querySelector('.cl');
+tx.value=it.text;ul.checked=it.useLink;ln.value=it.link;sz.value=it.scale||100;sv.textContent=(it.scale||100)+'%';sz.oninput=()=>{it.scale=+sz.value;sv.textContent=sz.value+'%';render()};uc.checked=!!it.useColor;cl.value=it.color||'#ffffff';cl.disabled=!it.useColor;
+tx.oninput=()=>{it.text=tx.value;render()};ul.onchange=()=>{it.useLink=ul.checked;render()};ln.oninput=()=>{it.link=ln.value;render()};
+cl.oninput=()=>{it.color=cl.value;render()};uc.onchange=()=>{it.useColor=uc.checked;cl.disabled=!uc.checked;render()};
+r.onclick=e=>{const a=e.target.dataset&&e.target.dataset.a;if(a=='h'){it.hidden=!it.hidden;list();render()}else if(a=='d'){C.items=C.items.filter(x=>x!=it);list();render()}else if(!e.target.closest('input')){sel=it.id;mark();render()}};
+r.querySelector('.hd').onmousedown=()=>{r.draggable=true;addEventListener('mouseup',()=>{r.draggable=false},{once:true})};r.ondragend=()=>{r.draggable=false};
+sv.title='Klik dua kali untuk mengetik ukuran';
+sv.ondblclick=()=>{const n=document.createElement('input');n.type='number';n.min=10;n.max=500;n.value=it.scale||100;n.style.cssText='width:70px;padding:2px 6px;border-radius:8px;border:1px solid #8b5cf6;background:var(--bg);color:var(--t);font:inherit';sv.replaceWith(n);n.focus();n.select();let d=0;
+const fin=()=>{if(d)return;d=1;const v=Math.max(10,Math.min(500,+n.value||100));it.scale=v;sz.value=v;sv.textContent=v+'%';n.replaceWith(sv);render()};
+n.onblur=fin;n.onkeydown=e=>{if(e.key=='Enter')fin();if(e.key=='Escape'){n.value=it.scale||100;fin()}}};
+r.ondragstart=e=>{e.dataTransfer.setData('text/plain',it.id)};
+r.ondragover=e=>{e.preventDefault();r.classList.add('over')};r.ondragleave=()=>r.classList.remove('over');
+r.ondrop=e=>{e.preventDefault();const id=e.dataTransfer.getData('text/plain'),f=C.items.find(x=>x.id==id);if(!f||f==it)return;C.items.splice(C.items.indexOf(f),1);C.items.splice(C.items.indexOf(it),0,f);list();render()};
+L.appendChild(r)})}
+
+$('#up').onclick=()=>$('#upf').click();
+$('#upf').onchange=e=>{[...e.target.files].forEach(f=>{const r=new FileReader();r.onload=()=>{C.items.push({id:uid(),src:r.result,text:f.name.replace(/\.[^.]+$/,''),link:'',useLink:false,hidden:false,color:'',useColor:false});list();render()};r.readAsDataURL(f)});e.target.value=''};
+$('#addt').onclick=()=>{C.items.push({id:uid(),src:'',text:'Nama Brand',link:'',useLink:false,hidden:false,color:'',useColor:false});list();render()};
+$('#ed').onchange=render;
+$('#rs').onclick=()=>{if(confirm('Reset semua pengaturan & logo?')){C=JSON.parse(JSON.stringify(DEF));$('#set').innerHTML='';setup();list();render()}};
+$('#imp').onclick=()=>$('#impf').click();
+$('#impf').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j.items)throw 0;C=Object.assign({},DEF,j);$('#set').innerHTML='';setup();list();render()}catch(x){alert('File config.json tidak valid')}};r.readAsText(f);e.target.value=''};
+
+/* tema simulasi */
+function th(t){document.documentElement.dataset.theme=t;$('#th').textContent='Tema: '+(t=='dark'?'Dark 🌙':'Light ☀️')}
+th(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+$('#th').onclick=()=>th(document.documentElement.dataset.theme=='dark'?'light':'dark');
+
+/* ===== EKSPOR (sistem tempa file) ===== */
+const script=()=>'(function(){var C='+JSON.stringify(C).replace(/</g,'\\u003c')+';var R=('+RT.toString()+')();var s=document.currentScript,t=document.getElementById("fixs-marquee");if(!t){t=document.createElement("div");s.parentNode.insertBefore(t,s)}R(t,C,{})})();';
+function exp(){const v=($('#pth').value.trim()||'components/Marquee/marquee.js').replace(/\\/g,'/');try{localStorage.setItem('fxm-path',v)}catch(e){}$('#out').value='<section>\n  <div id="fixs-marquee"></div>\n  <script src="'+v+'"><\/script>\n</section>'}
+$('#pth').value=(()=>{try{return localStorage.getItem('fxm-path')}catch(e){}})()||'components/Marquee/marquee.js';$('#pth').oninput=exp;
+$('#cp2').onclick=async()=>{const v='<div id="fixs-marquee"></div>\n<script>\n'+script()+'\n<\/script>';try{await navigator.clipboard.writeText(v)}catch(e){const t=document.createElement('textarea');t.value=v;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}$('#cp2').textContent='Tersalin ✓';setTimeout(()=>$('#cp2').textContent='Salin versi 1 file (panjang, tanpa folder)',1500)};
+$('#cp').onclick=async()=>{exp();const v=$('#out').value;try{await navigator.clipboard.writeText(v)}catch(e){$('#out').select();document.execCommand('copy')}$('#cp').textContent='Tersalin ✓';setTimeout(()=>$('#cp').textContent='Salin script',1500)};
+$('#zp').onclick=async()=>{if(!window.JSZip)return alert('JSZip gagal dimuat (butuh internet sekali untuk library ZIP).');
+const z=new JSZip(),cfg=JSON.parse(JSON.stringify(C));
+cfg.items.forEach((it,i)=>{const m=/^data:([^;,]+)[^,]*;base64,(.*)$/.exec(it.src||'');if(m){const ext=(m[1].split('/')[1]||'png').replace('svg+xml','svg').replace('jpeg','jpg').replace(/\+.*/,'');z.file('assets/logo-'+(i+1)+'.'+ext,m[2],{base64:true})}});
+z.file('index.html',INDEX);z.file('marquee.js',LOADER);z.file('css/marquee-logo.css','/* Fixs Arts - Marquee Logo */\n'+FM.css+'\n');
+z.file('js/marquee-logo.js','/* Fixs Arts - Marquee Logo (runtime) */\nwindow.FixsMarquee=(function(){var RT='+RT.toString()+';var r=RT();return{render:r,rt:RT,css:r.css}})();\n'+AUTO);
+z.file('js/marquee-config.js','window.FIXS_MARQUEE = '+JSON.stringify(cfg,null,2).replace(/</g,'\\u003c')+';\n');
+z.file('config.json',JSON.stringify(cfg,null,2));z.file('README.md',README);
+const bl=await z.generateAsync({type:'blob'}),l=document.createElement('a');l.href=URL.createObjectURL(bl);l.download='Marquee-Logo.zip';l.click();setTimeout(()=>URL.revokeObjectURL(l.href),2000)};
+
+setup();list();render();exp();
+</script>
+</body>
+</html>

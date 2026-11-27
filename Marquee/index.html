@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marquee Logo</title>
+<style>
+body{margin:0;font-family:system-ui,sans-serif;background:#0b0b12;color:#fff}
+[data-theme=light] body{background:#fff;color:#16162a}
+section{max-width:1100px;margin:60px auto;padding:0 20px}
+button{font:inherit;padding:8px 16px;border-radius:999px;border:1px solid #8b5cf6;background:none;color:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<section>
+  <button onclick="var d=document.documentElement;d.dataset.theme=d.dataset.theme=='dark'?'light':'dark'">Ganti tema</button>
+  <h2>Dipercaya oleh</h2>
+  <!-- Section marquee logo: pindahkan div ini ke posisi mana pun -->
+  <div id="fixs-marquee"></div>
+  <script src="marquee.js"></script>
+</section>
+</body>
+</html>
