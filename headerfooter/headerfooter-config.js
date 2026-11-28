@@ -12,11 +12,6 @@
  *   <footer data-site-footer></footer>
  */
 
-/* ===== ALAMAT WEBSITE UTAMA =====
- * Komponen ini dipakai dari repo lain (fixsarts-auto.github.io), jadi semua link ke halaman
- * website harus ABSOLUT. Ganti SITE bila domain website berubah. */
-var SITE = "https://studio.fixs-arts.workers.dev";
-
 /* ===== HEADER ===== */
 window.HeaderConfig = {
   brand: {
@@ -24,26 +19,26 @@ window.HeaderConfig = {
     logoHeight: "40px",
     main: "FIXS",
     accent: ".ARTS",
-    href: SITE + "/"
+    href: "https://fixstudio"
   },
   menu: [
-    { label: "Home", href: SITE + "/" },
+    { label: "Home", href: "home: \"/\"" },
     { label: "Store", href: "https://tr.ee/fixs-store" },
     {
       label: "Layanan",
-      href: SITE + "/html/services.html",
+      href: "https://studio.fixs-arts.workers.dev/html/services.html",
       also: ["service-detail.html"],
       dropdown: {
-        show: false,
+        show: true,
         items: [
-          { label: "Jasa Design Graphic", href: SITE + "/html/services.html" },
-          { label: "Instal Ulang Windows", href: SITE + "/html/services.html" }
+          { label: "Jasa Design Graphic", href: "https://studio.fixs-arts.workers.dev/html/services.html" },
+          { label: "Instal Ulang Windows", href: "https://studio.fixs-arts.workers.dev/html/services.html" }
         ]
       }
     },
     {
       label: "Portfolio",
-      href: SITE + "/html/portfolio.html",
+      href: "https://studio.fixs-arts.workers.dev/html/portfolio.html",
       also: ["project-detail.html"],
       dropdown: {
         show: true,
@@ -53,18 +48,35 @@ window.HeaderConfig = {
         ]
       }
     },
-    { label: "Tentang", href: SITE + "/html/about.html" }
+    {
+      label: "Tools",
+      href: "#",
+      external: true,
+      dropdown: {
+        show: true,
+        items: [
+          { label: "Fixs Flow", href: "https://tr.ee/fixsflow" },
+          { label: "Fixs QR", href: "https://tr.ee/fixsqr" }
+        ]
+      }
+    },
+    { label: "Tentang", href: "https://tr.ee/fikri-profile" }
   ],
   search: {
     show: true,
-    action: SITE + "/html/services.html",
+    action: "https://studio.fixs-arts.workers.dev/html/services.html",
     placeholder: "Cari layanan...",
     label: "Cari layanan",
     icon: "assets/icon/search.png",
     emoji: "🔍"
   },
-  rightButton: { mode: "none" },   // keranjang dihapus: checkout kini lewat tombol Beli (fa-checkout.js)
-  cart: { href: SITE + "/html/services.html", label: "Layanan", icon: "assets/icon/cart.png", emoji: "🛍️" },
+  rightButton: { mode: "hamburger" },
+  cart: {
+    href: "https://studio.fixs-arts.workers.dev/html/services.html",
+    label: "Layanan",
+    icon: "assets/icon/cart.png",
+    emoji: "🛍️"
+  },
   iconSize: "20px",
   toggleLabel: "Buka menu"
 };
@@ -77,7 +89,7 @@ window.FooterConfig = {
     logoHeight: "50px",
     textMain: "FIXS",
     textAccent: ".ARTS",
-    href: SITE + "/",
+    href: "https://fixstudio",
     description: "Studio Desain Kreatif untuk Brand yang ingin tampil beda — dari Identitas Visual sampai Materi Promosi."
   },
   icons: {
@@ -92,9 +104,9 @@ window.FooterConfig = {
     {
       title: "@explore",
       links: [
-        { label: "@services", href: SITE + "/html/services.html" },
-        { label: "@portfolio", href: SITE + "/html/portfolio.html" },
-        { label: "@about", href: SITE + "/html/about.html" }
+        { label: "@services", href: "https://studio.fixs-arts.workers.dev/html/services.html" },
+        { label: "@portfolio", href: "https://studio.fixs-arts.workers.dev/html/portfolio.html" },
+        { label: "@about", href: "https://studio.fixs-arts.workers.dev/html/about.html" }
       ]
     },
     {
