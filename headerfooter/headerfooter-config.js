@@ -12,57 +12,61 @@
  *   <footer data-site-footer></footer>
  */
 
+/* ===== ALAMAT WEBSITE UTAMA =====
+ * Komponen ini dipakai dari repo lain (fixsarts-auto.github.io), jadi semua link ke halaman
+ * website harus ABSOLUT. Ganti SITE bila domain website berubah. */
+var SITE = "https://studio.fixs-arts.workers.dev";
+
 /* ===== HEADER ===== */
 window.HeaderConfig = {
   brand: {
     logoUrl: "assets/logo/fixs arts.gif",
-    logoHeight: "42px",
+    logoHeight: "40px",
     main: "FIXS",
     accent: ".ARTS",
-    href: "index.html"
+    href: SITE + "/"
   },
   menu: [
-    { label: "Home", href: "index.html" },
+    { label: "Home", href: SITE + "/" },
     { label: "Store", href: "https://tr.ee/fixs-store" },
     {
       label: "Layanan",
-      href: "#services.html",
+      href: SITE + "/html/services.html",
       also: ["service-detail.html"],
       dropdown: {
-        show: true,
+        show: false,
         items: [
-          { label: "Creative Design", href: "services.html" },
-          { label: "Instal Ulang Windows", href: "services.html" }
+          { label: "Jasa Design Graphic", href: SITE + "/html/services.html" },
+          { label: "Instal Ulang Windows", href: SITE + "/html/services.html" }
         ]
       }
     },
-    { label: "Portfolio", href: "#portfolio.html", also: ["project-detail.html"] },
     {
-      label: "Tools",
-      href: "#",
+      label: "Portfolio",
+      href: SITE + "/html/portfolio.html",
+      also: ["project-detail.html"],
       dropdown: {
         show: true,
         items: [
-          { label: "Fixs Flow", href: "https://flow.fixs-arts.workers.dev/" },
-          { label: "Fixs QR", href: "https://qr.fixs-arts.workers.dev/" }
+          { label: "Instagram", href: "https://www.instagram.com/fixs.arts/" },
+          { label: "Behance", href: "https://www.behance.net/fixsarts" }
         ]
       }
     },
-    { label: "Tentang", href: "https://fikrispt.github.io/", external: true }
+    { label: "Tentang", href: SITE + "/html/about.html" }
   ],
   search: {
     show: true,
-    action: "services.html",
+    action: SITE + "/html/services.html",
     placeholder: "Cari layanan...",
     label: "Cari layanan",
     icon: "assets/icon/search.png",
     emoji: "🔍"
   },
-  rightButton: { mode: "hamburger" },
-  cart: { href: "cart.html", label: "Keranjang", icon: "assets/icon/cart.png", emoji: "🛍️" },
+  rightButton: { mode: "none" },   // keranjang dihapus: checkout kini lewat tombol Beli (fa-checkout.js)
+  cart: { href: SITE + "/html/services.html", label: "Layanan", icon: "assets/icon/cart.png", emoji: "🛍️" },
   iconSize: "20px",
-  toggleLabel: "Buka menu",
-  style: { mode: "solid", background: "#000000" }
+  toggleLabel: "Buka menu"
 };
 
 /* ===== FOOTER ===== */
@@ -70,55 +74,57 @@ window.FooterConfig = {
   brand: {
     logoUrl: "assets/logo/Fixs Arts (White).png",
     logoUrlLight: "assets/logo/fixsarts-light.png",
-    logoHeight: "42px",
+    logoHeight: "50px",
     textMain: "FIXS",
     textAccent: ".ARTS",
-    href: "index.html",
-    description: "@tagline"
+    href: SITE + "/",
+    description: "Studio Desain Kreatif untuk Brand yang ingin tampil beda — dari Identitas Visual sampai Materi Promosi."
   },
-  social: {
-    show: true,
-    shape: "circle",
-    size: "44px",
-    label: "Media sosial",
-    items: [
-      {
-        name: "whatsapp",
-        label: "WhatsApp",
-        href: "https://api.whatsapp.com/send/?phone=6285655526686&text=Hallo%21+%2Afixs.arts%2A%0ASaya+tertarik+dengan+jasa+Creative+Design&type=phone_number&app_absent=0",
-        show: true,
-        link: true
-      },
-      {
-        name: "instagram",
-        label: "Instagram",
-        href: "https://www.instagram.com/fixs.arts/",
-        show: true,
-        link: true
-      },
-      {
-        name: "tiktok",
-        label: "TikTok",
-        href: "https://www.tiktok.com/@fixs.arts",
-        show: true,
-        link: true
-      },
-      { name: "email", label: "Gmail", href: "mailto:fixs.arts@gmail.com", show: true, link: true },
-      { name: "website", label: "Website", href: "https://", show: true, link: true }
-    ]
+  icons: {
+    whatsapp: "assets/icon/whatsapp.png",
+    email: "assets/icon/email.png",
+    instagram: "assets/icon/instagram.png",
+    tiktok: "assets/icon/tiktok.png",
+    website: "assets/icon/website.png"
   },
-  icons: {},
   iconColor: "auto",
   columns: [
     {
       title: "@explore",
       links: [
-        { label: "@services", href: "services.html" },
-        { label: "@portfolio", href: "portfolio.html" },
-        { label: "@about", href: "https://fikrispt.github.io/", external: true }
+        { label: "@services", href: SITE + "/html/services.html" },
+        { label: "@portfolio", href: SITE + "/html/portfolio.html" },
+        { label: "@about", href: SITE + "/html/about.html" }
       ]
     },
-    { title: "@location", lines: ["Indonesia"] }
+    {
+      title: "@contact",
+      links: [
+        {
+          label: "WhatsApp",
+          href: "https://api.whatsapp.com/send/?phone=6285655526686&text=Hallo%21+%2Afixs.arts%2A%0ASaya+tertarik+dengan+jasa+Creative+Design&type=phone_number&app_absent=0",
+          icon: "whatsapp",
+          external: true
+        },
+        { label: "fixs.arts@gmail.com", href: "mailto:fixs.arts@gmail.com", icon: "email", external: true },
+        {
+          label: "Instagram",
+          href: "https://www.instagram.com/fixs.arts/",
+          icon: "instagram",
+          external: true
+        }
+      ]
+    },
+    {
+      title: "@location",
+      links: [
+        {
+          label: "Banjarmasin, Indonesia",
+          href: "https://maps.app.goo.gl/n2NWofqy2PqZjbtX8",
+          external: true
+        }
+      ]
+    }
   ],
   bottom: { copyright: "@copyright", note: "" },
   language: {
